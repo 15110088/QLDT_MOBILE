@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/itemHome"
+            android:icon="@drawable/ic_action_toggle_star"
+            android:title="Home"
+            />
+        <item
+            android:checked="true"
+            android:id="@+id/item_kvhc_huyen"
+            android:icon="@drawable/ic_room_black_24dp"
+            android:title="Khu vực hành chính" />
+      <!--  <item
+            android:checked="true"
+            android:id="@+id/item_bieuDo"
+            android:icon="@drawable/biendong"
+            android:title="Biểu đồ thống kê" />-->
+
+    </group>
+
+    <item android:title="Thông tin">
+        <menu>
+            <item
+                android:id="@+id/item_navigation_drawer_help_and_feedback"
+                android:icon="@drawable/ic_person_pin_black_24dp"
+                android:title="@string/dangnhap" />
+           <item
+                android:id="@+id/item_dangXuat"
+                android:icon="@drawable/lock"
+               android:visible="false"
+                android:title="Đăng xuất" />
+
+            <item
+                android:id="@+id/itemLienHe"
+                android:icon="@drawable/ic_contact_mail_black_24dp"
+                android:title="Liên hệ"/>
+        </menu>
+    </item>
+</menu>

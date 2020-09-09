@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">QLDT_MOBILE</string>
+    <string name="title_activity_loggin">Đăng nhập</string>
+    <string name="action_settings">Cài đặt</string>
+    <string name="hind_timkiem">(Nhập tờ/thửa) hoặc số nhà</string>
+    <string name="dangnhap">Đăng nhập</string>
+    <string name="Caidat">Cài đặt</string>
+    <string name="search">Tìm kiếm</string>
+
+</resources>

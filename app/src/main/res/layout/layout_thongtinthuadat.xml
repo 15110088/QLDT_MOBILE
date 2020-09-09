@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView android:text="Số nhà :"
+            android:layout_width="wrap_content"
+            style="@style/lblView" />
+
+        <TextView
+            android:id="@+id/lblSoNhaTest"
+            android:layout_width="match_parent"
+            android:text= "123"
+            style="@style/lblThongTin"/>
+    </LinearLayout>
+
+    <TextView android:layout_marginTop="10dp"
+        android:text="Địa chỉ: "
+        android:layout_width="match_parent"
+        style="@style/lblView"/>
+
+    <TextView
+        android:id="@+id/lblDiaChi"
+        android:layout_width="match_parent"
+        android:text= "@null"
+        style="@style/lblThongTin"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView android:text="Số thửa :"
+            android:layout_width="wrap_content"
+            style="@style/lblView" />
+
+        <TextView android:id="@+id/lblSoThua1"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="@null"
+            style="@style/lblThongTin" />
+
+        <TextView
+            android:text="Số tờ :"
+            android:layout_width="wrap_content"
+            style="@style/lblView" />
+
+        <TextView
+            android:id="@+id/lblSoTo1"
+            android:text="@null"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="0dp"
+            style="@style/lblThongTin"/>
+
+        <TextView
+            android:text="Diện tích:"
+            android:layout_width="wrap_content"
+            style="@style/lblView"/>
+
+        <TextView
+            android:id="@+id/lblDienTich1"
+            android:layout_width="wrap_content"
+            android:text="@null"
+            android:layout_marginTop="0dp"
+            style="@style/lblThongTin" />
+
+
+    </LinearLayout>
+
+
+    <TextView
+        android:text="Loại đất:"
+        android:layout_width="match_parent"
+        style="@style/lblView"/>
+
+    <TextView
+        android:id="@+id/lblLoaiDat1"
+        android:text="@null"
+        android:inputType="textMultiLine"
+        android:singleLine="false"
+        android:maxLines="3"
+        android:layout_width="match_parent"
+        style="@style/lblThongTin" />
+
+    <TextView
+        android:text="Chủ sử dụng:"
+        android:layout_width="match_parent"
+        style="@style/lblView"
+        android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/lblTenChu1"
+        android:text="@null"
+        android:inputType="textMultiLine"
+        android:maxLines="2"
+        android:singleLine="false"
+        android:layout_width="match_parent"
+        style="@style/lblThongTin"/>
+
+    <TextView
+        android:text="Chủ sử dụng:"
+        android:layout_width="match_parent"
+        style="@style/lblView"
+        android:singleLine="true" />
+
+    <TextView
+        android:text="Chủ sử dụng:"
+        android:layout_width="match_parent"
+        style="@style/lblView"
+        android:singleLine="true" />
+    <TextView
+        android:text="Chủ sử dụng:"
+        android:layout_width="match_parent"
+        style="@style/lblView"
+        android:singleLine="true" /> <TextView
+    android:text="Chủ sử dụng:"
+    android:layout_width="match_parent"
+    style="@style/lblView"
+    android:singleLine="true" /> <TextView
+    android:text="Chủ sử dụng:"
+    android:layout_width="match_parent"
+    style="@style/lblView"
+    android:singleLine="true" /> <TextView
+    android:text="Chủ sử dụng:"
+    android:layout_width="match_parent"
+    style="@style/lblView"
+    android:singleLine="true" /> <TextView
+    android:text="Chủ sử dụng:"
+    android:layout_width="match_parent"
+    style="@style/lblView"
+    android:singleLine="true" />
+    <TextView
+        android:text="Chủ sử dụng:"
+        android:layout_width="match_parent"
+        style="@style/lblView"
+        android:singleLine="true" />
+    <TextView
+    android:text="Chủ sử dụng:"
+    android:layout_width="match_parent"
+    style="@style/lblView"
+    android:singleLine="true" />
+    <TextView
+    android:text="Chủ sử dụng:"
+    android:layout_width="match_parent"
+    style="@style/lblView"
+    android:singleLine="true" />
+
+
+
+
+
+
+
+
+
+</LinearLayout>
