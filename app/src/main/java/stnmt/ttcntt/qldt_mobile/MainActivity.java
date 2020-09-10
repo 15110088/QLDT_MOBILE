@@ -103,6 +103,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Callout mCallout;
     private ServiceFeatureTable mServiceFeatureTable;
     private FeatureLayer mFeatureLayer;
+
+    private ServiceFeatureTable mServiceFeatureTableMauQH;
+    private FeatureLayer mFeatureLayerMauQH;
+
     ArcGISMapImageSublayer SubRanhThua;
     ArcGISMapImageLayer tiledLayerQLDTRanhThua;
     LocationDisplay lDisplayManager;
@@ -110,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Toolbar toolbar;
     ActionBar actionBar;
     TextView textView;
-    ImageButton btntest;
+    ImageButton btntest,btnLayerQH;
     private MenuItem mSearchAction;
     private boolean isSearchOpened = false;
     private AutoCompleteTextView edtSeach;
@@ -121,10 +125,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private String dienTich = "";
     private String _tieuDe = "";
     private String loaiDat="";
+    private String loaiQH ="";
     LayoutInflater inflater;
     Intent _intentThuaChu = null;
     Boolean isBusy = false;
     boolean _enableGPS = false;
+    boolean _isLayerQH = false;
     //LocationDisplayManager lDisplayManager = null;
     RouteTask routeTask;
   //  List<Point> lstPath;
@@ -196,9 +202,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         UserCredential user = new UserCredential("dothibienhoa", "dothibienhoa2020");
 
-        ServiceFeatureTable  mServiceFeatureTableQH=new ServiceFeatureTable("https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/DOTHIBIENHOA/PhanKhu_26377/MapServer/0");
-        mServiceFeatureTableQH.setCredential(user);
-        FeatureLayer mFeatureLayerQH=new FeatureLayer(mServiceFeatureTableQH);
+        mServiceFeatureTableMauQH=new ServiceFeatureTable("https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/DOTHIBIENHOA/PhanKhu_26377/MapServer/0");
+        mServiceFeatureTableMauQH.setCredential(user);
+        mFeatureLayerMauQH=new FeatureLayer(mServiceFeatureTableMauQH);
 
         ServiceFeatureTable  mServiceFeatureTable2=new ServiceFeatureTable(urlSoNha);
         FeatureLayer mFeatureLayer2=new FeatureLayer(mServiceFeatureTable2);
@@ -211,7 +217,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mServiceFeatureTable.addDoneLoadingListener(()->{
             if (mFeatureLayer.getLoadStatus() == LoadStatus.LOADED) {
                 Toast.makeText(this, "Load Lop Ranh Thua Service ", Toast.LENGTH_LONG).show();
-
             }
             else {
                 String error = "Error loading mServiceFeatureTable layer: " + mFeatureLayer.getLoadError().getMessage();
@@ -224,7 +229,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mFeatureLayer.addDoneLoadingListener(()->{
             if (mFeatureLayer.getLoadStatus() == LoadStatus.LOADED) {
                 Toast.makeText(this, "Load Lop Ranh Thua ", Toast.LENGTH_LONG).show();
-
             }
             else {
                 String error = "Error loading mFeatureLayer layer: " + mFeatureLayer.getLoadError().getMessage();
@@ -234,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         ArcGISMap map = mMapView.getMap();
-
         ArcGISMapImageLayer tiledLayer = new ArcGISMapImageLayer(url);
         ArcGISMapImageLayer tiledLayerNen = new ArcGISMapImageLayer(urlNen);
         ArcGISMapImageLayer tiledLayerSoNha = new ArcGISMapImageLayer(urlSoNha);
@@ -259,29 +262,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        map.getBasemap().getBaseLayers().add(tiledLayerSoNha);
 //        map.getBasemap().getBaseLayers().add(mFeatureLayer);
 
-
         //Test
-        ArcGISMapImageLayer tiledLayerQH = new ArcGISMapImageLayer ("https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/DOTHIBIENHOA/PhanKhu_26377/MapServer");
-        tiledLayerQH.setCredential(user);
-        tiledLayerQH.loadAsync();
-        tiledLayerQH.addDoneLoadingListener(()->{
-            if (tiledLayerQH.getLoadStatus() == LoadStatus.LOADED) {
-                Toast.makeText(this, "Load Lop QH ", Toast.LENGTH_LONG).show();
+//        ArcGISMapImageLayer tiledLayerQH = new ArcGISMapImageLayer ("https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/DOTHIBIENHOA/PhanKhu_26377/MapServer");
+//        tiledLayerQH.setCredential(user);
+//        tiledLayerQH.loadAsync();
+//        tiledLayerQH.addDoneLoadingListener(()->{
+//            if (tiledLayerQH.getLoadStatus() == LoadStatus.LOADED) {
+//                Toast.makeText(this, "Load Lop QH ", Toast.LENGTH_LONG).show();
+//            }
+//            else {
+//                String error = "Error loading ENC layer: " + tiledLayerQH.getLoadError().getMessage();
+//                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+//                Log.e("OK", error);
+//            }
+//        });
 
-            }
-            else {
-                String error = "Error loading ENC layer: " + tiledLayerQH.getLoadError().getMessage();
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-                Log.e("OK", error);
-            }
-        });
 
 
-        ArcGISTiledLayer tiledLayerRanhThua = new ArcGISTiledLayer("https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/DOTHIBIENHOA/26377/MapServer");
-        tiledLayerRanhThua.setCredential(user);
 
-        map.getBasemap().getBaseLayers().add(mFeatureLayerQH);
+        map.getBasemap().getBaseLayers().add(mFeatureLayerMauQH);
         map.getOperationalLayers().add(mFeatureLayer);
+
         ZoomToXa(mMapView,_maXa);
 
         GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
@@ -299,6 +300,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 BottomSheetDialog bottomSheet= new BottomSheetDialog(MainActivity.this);
                 bottomSheet.setContentView(R.layout.bottom_sheet);
                 bottomSheet.show();
+            }
+        });
+
+        btnLayerQH = findViewById(R.id.btnLayerQH);
+
+        btnLayerQH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    if(_isLayerQH)
+                    {
+                        _isLayerQH=false;
+                        Toast.makeText(getApplication(), "Chọn Lớp Ranh Thủa", Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        _isLayerQH=true;
+                        Toast.makeText(getApplication(), "Chọn Lớp Quy Hoạch", Toast.LENGTH_LONG).show();
+                    }
             }
         });
 
@@ -406,10 +425,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.d("Info", "onSingleTapConfirmed: " + motionEvent.toString());
                 soTo = "";
                 soThua = "";
-                dienTich = "";
+                dienTich = "0";
                 loaiDat="";
                 strContent="";
                 mFeatureLayer.clearSelection();
+                mFeatureLayerMauQH.clearSelection();
+
                 // get the point that was clicked and convert it to a point in map coordinates
                 android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
                         Math.round(motionEvent.getY()));
@@ -420,7 +441,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 int tolerance = 10;
 
                 final ListenableFuture<IdentifyLayerResult> identifyLayerResultListenableFuture = mMapView
-                        .identifyLayerAsync(mFeatureLayer, screenPoint, tolerance, false, 1);
+                        .identifyLayerAsync(_isLayerQH?mFeatureLayerMauQH:mFeatureLayer, screenPoint, tolerance, false, 1);
+
+
                 // create a textview for the callout
                 identifyLayerResultListenableFuture.addDoneListener(() -> {
                     try {
@@ -440,7 +463,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                         for (GeoElement element : identifyLayerResult.getElements()) {
                             Feature feature = (Feature) element;
-                            mFeatureLayer.selectFeature(feature);
+                           
+                            if(_isLayerQH)
+                            {
+                                mFeatureLayerMauQH.selectFeature(feature);
+                            }
+                            else{
+                                mFeatureLayer.selectFeature(feature);
+                            }
                             // create a map of all available attributes as name value pairs
                             Map<String, Object> attr = feature.getAttributes();
                             Set<String> keys = attr.keySet();
@@ -469,16 +499,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 {
                                     loaiDat=attr.get(key).toString();
                                 }
+                                if(key.equals("TENVUNGQUY"))
+                                {
+                                    loaiQH=attr.get(key).toString();
+                                }
 
 
-
-                                // append name value pairs to text view
-                                //  calloutContent.append(key + " | " + value + "\n");
                                 Log.i(getResources().getString(R.string.app_name), "Select feature failed: " + key + " | " + value + "\n");
 
                             }
-                            strContent = String.format("Số tờ: %s, số thửa: %s, diện tích: %.1fm²", soTo, soThua, Double.parseDouble(dienTich));
+                            if(_isLayerQH)
+                            {
+                                strContent = String.format("Mục Đích Quy Hoạch: %s", loaiQH);
 
+                            }
+                            else {
+                                strContent = String.format("Số tờ: %s, số thửa: %s, diện tích: %.1fm²", soTo, soThua, Double.parseDouble(dienTich));
+                            }
                             // center the mapview on selected feature
                              Envelope envelope = feature.getGeometry().getExtent();
                              mMapView.setViewpointGeometryAsync(envelope, 100);
@@ -522,8 +559,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //Ham dong, mo edidtext search
     protected void handleMenuSearch(){
         ActionBar action = getSupportActionBar(); //get the actionbar
-        ImageButton imgButtonGPS = (ImageButton) findViewById(R.id.imgThuaChu);
-        imgButtonGPS.setVisibility(View.INVISIBLE);
+        //ImageButton imgButtonGPS = (ImageButton) findViewById(R.id.imgThuaChu);
+        //imgButtonGPS.setVisibility(View.INVISIBLE);
         if(isSearchOpened)
         {
             action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
@@ -1042,7 +1079,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             ServiceFeatureTable  mServiceFeatureTableZoom=new ServiceFeatureTable("http://datdai.stnmt.dongnai.gov.vn:8080/atlasadaptordatdai/rest/services/Atlas2015/NEN_KTXH_150715/MapServer/61");
 
             QueryParameters q = new QueryParameters();
-
             q.setWhereClause(String.format("MASO =%s",maXa));
             q.setReturnGeometry(true);
             //q.setInSpatialReference(mMapView.getSpatialReference());

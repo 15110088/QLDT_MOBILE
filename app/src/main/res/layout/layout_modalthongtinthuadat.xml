@@ -5,31 +5,157 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         android:layout_width="match_parent"
-        android:background="#c0c0c0c"
+        android:background="@color/colorScreen"
+        android:orientation="vertical"
         android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@color/white"
+            >
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="20dp"
+                android:src="@drawable/ic_baseline_person_24"
+            >
+            </ImageView>
+
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:singleLine="true"
+                    android:text="TÊN CHỦ " />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    >
+                    <TextView
+                        style="@style/lblView"
+                        android:layout_width="80dp"
+                        android:singleLine="true"
+                        android:text="Số Tờ:" />
+
+                    <TextView
+                        style="@style/lblView"
+                        android:layout_width="80dp"
+                        android:singleLine="true"
+                        android:text="ODT:" />
+
+                    <TextView
+                        style="@style/lblView"
+                        android:layout_width="80dp"
+                        android:singleLine="true"
+                        android:text="Số Thửa:" />
+
+                    <TextView
+                        style="@style/lblView"
+                        android:layout_width="80dp"
+                        android:singleLine="true"
+                        android:text="ODT:" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+        <View
+            android:id="@+id/view5"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_wave"
+
+            />
+        <TextView
+            android:text="THÔNG TIN THỬA ĐẤT"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true" />
+
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:layout_margin="20dp"
+            android:layout_marginHorizontal="20dp"
             android:elevation="8dp"
              app:cardCornerRadius="8dp"
             >
-         <GridView
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:numColumns="2"
-             >
-             <TextView
-                 android:text="Số Nhà:"
-                 android:layout_width="wrap_content"
-                 style="@style/lblView"
-                 android:singleLine="true" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                >
+                <TextView
+                    android:text="Quy Hoạch:"
+                    android:layout_width="80dp"
+                    style="@style/lblView"
+                    android:singleLine="true" />
+                <TextView
+                    android:text="ODT:"
+                    android:layout_width="80dp"
+                    style="@style/lblView"
+                    android:singleLine="true" />
+                <TextView
+                    android:text="Diện Tích:"
+                    android:layout_width="80dp"
 
+                    style="@style/lblView"
+                    android:singleLine="true" />
+                <TextView
+                    android:text="ODT:"
+                    android:layout_width="80dp"
 
+                    style="@style/lblView"
+                    android:singleLine="true" />
 
-         </GridView>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+
+                >
+                <TextView
+                    android:text="Số Nhà:"
+                    android:layout_width="80dp"
+                    style="@style/lblView"
+                    android:singleLine="true" />
+                <TextView
+                    android:text="ODT:"
+                    android:layout_width="80dp"
+                    style="@style/lblView"
+                    android:singleLine="true" />
+                <TextView
+                    android:text="Loại Đất:"
+                    android:layout_width="80dp"
+                    style="@style/lblView"
+                    android:singleLine="true" />
+                <TextView
+                    android:text="ODT:"
+                    android:layout_width="80dp"
+                    style="@style/lblView"
+                    android:singleLine="true" />
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+        </LinearLayout>
+
+
 
     </LinearLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>
