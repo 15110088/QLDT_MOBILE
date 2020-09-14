@@ -97,6 +97,15 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import stnmt.ttcntt.qldt_mobile.RetrofitDemo.ConvertMoneyService;
+import stnmt.ttcntt.qldt_mobile.RetrofitDemo.ResponseCurrency;
+import stnmt.ttcntt.qldt_mobile.Util.BottomSheetCustom;
+
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     private MapView mMapView;
@@ -107,12 +116,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private ServiceFeatureTable mServiceFeatureTableMauQH;
     private FeatureLayer mFeatureLayerMauQH;
 
+
     ArcGISMapImageSublayer SubRanhThua;
     ArcGISMapImageLayer tiledLayerQLDTRanhThua;
     LocationDisplay lDisplayManager;
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     ActionBar actionBar;
+    public     BottomSheetCustom bottomSheet;
     TextView textView;
     ImageButton btntest,btnLayerQH;
     private MenuItem mSearchAction;
@@ -136,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
   //  List<Point> lstPath;
     List<String> lstSoNha=null;
     List<String> lstKQSoNha=null;
-    private String urlServiceThongTin="http://stnmt.dongnai.gov.vn:8080/ServicesSoNhaLongThanh/ServicesViTri.svc/";
+    private String urlServiceThongTin="http://192.169.3.197/DTBienHoa/ServicesViTri.svc";
 
     private BottomSheetBehavior bottomSheetBehavior;
     private ToggleButton tbUpDown;
@@ -205,6 +216,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mServiceFeatureTableMauQH=new ServiceFeatureTable("https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/DOTHIBIENHOA/PhanKhu_26377/MapServer/0");
         mServiceFeatureTableMauQH.setCredential(user);
         mFeatureLayerMauQH=new FeatureLayer(mServiceFeatureTableMauQH);
+        mFeatureLayerMauQH.addDoneLoadingListener(()->{
+            if (mFeatureLayerMauQH.getLoadStatus() == LoadStatus.LOADED) {
+                Toast.makeText(this, "Load Lop Ranh Thua QH ", Toast.LENGTH_LONG).show();
+            }
+            else {
+                String error = "Error loading mServiceFeatureTable layer: " + mFeatureLayer.getLoadError().getMessage();
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                Log.e("OK", error);
+            }
+        });
 
         ServiceFeatureTable  mServiceFeatureTable2=new ServiceFeatureTable(urlSoNha);
         FeatureLayer mFeatureLayer2=new FeatureLayer(mServiceFeatureTable2);
@@ -238,7 +259,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         ArcGISMap map = mMapView.getMap();
-        ArcGISMapImageLayer tiledLayer = new ArcGISMapImageLayer(url);
+        ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer("https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/DOTHIBIENHOA/PhanKhu_26377/MapServer");
+        tiledLayer.setCredential(user);
+
         ArcGISMapImageLayer tiledLayerNen = new ArcGISMapImageLayer(urlNen);
         ArcGISMapImageLayer tiledLayerSoNha = new ArcGISMapImageLayer(urlSoNha);
 
@@ -257,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                    }
 //        });
 //
-//        map.getBasemap().getBaseLayers().add(tiledLayer);
+        // map.getBasemap().getBaseLayers().add(tiledLayer);
 //        map.getBasemap().getBaseLayers().add(tiledLayerNen);
 //        map.getBasemap().getBaseLayers().add(tiledLayerSoNha);
 //        map.getBasemap().getBaseLayers().add(mFeatureLayer);
@@ -296,15 +319,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         btntest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // QueryAndDisplayGraphics(mServiceFeatureTable, citySymbol, populationQuery, graphicsOverlay);
-                BottomSheetDialog bottomSheet= new BottomSheetDialog(MainActivity.this);
-                bottomSheet.setContentView(R.layout.bottom_sheet);
-                bottomSheet.show();
+               QueryAndDisplayGraphics(mServiceFeatureTable, citySymbol, populationQuery, graphicsOverlay);
             }
         });
 
         btnLayerQH = findViewById(R.id.btnLayerQH);
-
         btnLayerQH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -329,6 +348,31 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://apilayer.net/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ConvertMoneyService service= retrofit.create(ConvertMoneyService.class);
+
+        Call<ResponseCurrency> repos = service.convertVNDtoUSD("843d4d34ae72b3882e3db642c51e28e6","VND", "USD", 1);
+
+        repos.enqueue(new Callback<ResponseCurrency>() {
+            @Override
+            public void onResponse(Call<ResponseCurrency> call, Response<ResponseCurrency> response) {
+                ResponseCurrency res = response.body();
+                //Tỉ giá mình lấy được
+               Double exchangeRate = res.getQuotes().getUSDVND();
+                Log.d("Ty giá USD", exchangeRate.toString());
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseCurrency> call, Throwable t) {
+                Log.d("Error", t.getMessage().toString());
+            }
+        });
+
     }
     private void setupMap() {
     //    ArcGISRuntimeEnvironment.setLicense("26bcBUcGIOysj3d4");
@@ -337,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Basemap.Type basemapType = Basemap.Type.OPEN_STREET_MAP;
             double latitude =  10.890587;
             double longitude = 106.922532;
-            int levelOfDetail = 13;
+            int levelOfDetail = 11;
             ArcGISMap map = new ArcGISMap(basemapType, latitude, longitude, levelOfDetail);
             mMapView.setMap(map);
         }
@@ -511,7 +555,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             if(_isLayerQH)
                             {
                                 strContent = String.format("Mục Đích Quy Hoạch: %s", loaiQH);
-
                             }
                             else {
                                 strContent = String.format("Số tờ: %s, số thửa: %s, diện tích: %.1fm²", soTo, soThua, Double.parseDouble(dienTich));
@@ -519,6 +562,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             // center the mapview on selected feature
                              Envelope envelope = feature.getGeometry().getExtent();
                              mMapView.setViewpointGeometryAsync(envelope, 100);
+//                            View view = getLayoutInflater().inflate(R.layout.bottom_sheet, null);
+//                            bottomSheet= new BottomSheetDialog(MainActivity.this);
+//                            bottomSheet.setContentView(view);
+                            bottomSheet = new BottomSheetCustom(_maXa,soTo,soThua,dienTich,loaiDat);
+
+                            bottomSheet.show(getSupportFragmentManager(),bottomSheet.getTag());
+
+
                             // show callout
                             noiDung.setText(strContent);
                             imgButtonInfor.setOnClickListener(new View.OnClickListener() {
@@ -532,13 +583,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                     bundle.putString("strSoThua", soThua);
                                     bundle.putString("strDienTich", dienTich);
                                     bundle.putString("strLoaiDat", loaiDat);
-                                    Intent intent = new Intent(MainActivity.this, ThuaDatChiTiet.class);
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
+                                   // Intent intent = new Intent(MainActivity.this, ThuaDatChiTiet.class);
+                                    bottomSheet.show(getSupportFragmentManager(),bottomSheet.getTag());
+                                    //  intent.putExtras(bundle);
+                                    //startActivity(intent);
+
                                 }
                             });
                             Log.i(getResources().getString(R.string.app_name), "Content: " +calloutView+ "\n");
-                            //     mCallout.setStyle(R.xml.countypop);
 
                             mCallout = mMapView.getCallout();
                             mCallout.setLocation(mapPoint);
@@ -800,7 +852,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             {
                 //Toast.makeText(MainActivity.this,"http://stnmt.dongnai.gov.vn:8080/arcgis/rest/services/75" + maHuyen + "/" + maXa + "/MapServer",Toast.LENGTH_LONG).show();
                 return "http://stnmt.dongnai.gov.vn:8080/arcgis/rest/services/75" + maHuyen + "/" + maXa + "/MapServer";
-
             }
             else
             {
@@ -857,15 +908,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         soTo = data.getStringExtra("strSoTo");
                         soThua = data.getStringExtra("strSoThua");
                         TimKiemThuaDat(soTo, soThua);
-                        ImageButton imgButtonGPS = (ImageButton) findViewById(R.id.imgThuaChu);
-                        imgButtonGPS.setVisibility(View.VISIBLE);
-                        imgButtonGPS.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (_intentThuaChu != null)
-                                    startActivityForResult(_intentThuaChu, 1);
-                            }
-                        });
+//                        ImageButton imgButtonGPS = (ImageButton) findViewById(R.id.imgThuaChu);
+//                        imgButtonGPS.setVisibility(View.VISIBLE);
+//                        imgButtonGPS.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                if (_intentThuaChu != null)
+//                                    startActivityForResult(_intentThuaChu, 1);
+//                            }
+//                        });
                     }
                 }
                 if (resultCode == Activity.RESULT_CANCELED) {

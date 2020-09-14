@@ -63,8 +63,8 @@ public class ThuaDatChiTiet extends AppCompatActivity {
             String enData = cry.encrypt(data, key, iv);
             String paraEncode = Uri.encode(enData);
             // Bundle bundle = getIntent().getExtras();
-            String urlServiceThongTin="http://stnmt.dongnai.gov.vn:8080/ServicesSoNhaLongThanh/ServicesViTri.svc/";
-            url = urlServiceThongTin+ "layThongTinSoNhaEpt?thamSo="+paraEncode;
+            String urlServiceThongTin="http://192.169.3.197/DTBienHoa/ServicesViTri.svc/";
+            url = urlServiceThongTin+ "LayThongTinQuyHoach?thamSo="+paraEncode;
             clsUrl clsTT = new clsUrl(url,coQuyen,_dienTich,_loaiDat);
             AsynTaskLayThongTinThuaDat asynLayTT = new AsynTaskLayThongTinThuaDat(this);
             //asynLayTT.execute(url);

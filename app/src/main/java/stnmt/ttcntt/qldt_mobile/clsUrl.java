@@ -8,12 +8,17 @@ public class clsUrl {
     private Boolean _coQuyen;
     private String _dienTich;
     private String _loaiDat;
+
+
+
+
     public clsUrl (String url, Boolean coQuyen, String dienTich, String loaiDat)
     {
         _url =url;
         _coQuyen =coQuyen;
         _dienTich=dienTich;
         _loaiDat=loaiDat;
+
     }
     public String getUrl() {
         return _url;
@@ -36,4 +41,6 @@ public class clsUrl {
     public void setQuyen(Boolean coQuyen) {
         this._coQuyen = coQuyen;
     }
+
+
 }

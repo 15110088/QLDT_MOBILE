@@ -35,7 +35,7 @@
             android:layout_gravity="center"
             android:textSize="14sp"
             android:gravity="center_vertical"
-            android:text="Sở Tài nguyên và Môi trường Long An"
+            android:text="Sở Tài nguyên và Môi trường Đồng Nai"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textStyle="bold" />
 

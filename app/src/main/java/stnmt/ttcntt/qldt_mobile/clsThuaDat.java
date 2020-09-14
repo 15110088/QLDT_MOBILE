@@ -18,6 +18,23 @@ public class clsThuaDat {
     String soNha;
     String diaChi;
 
+    String viTri;
+    String maKVHC;
+    String maDuong;
+    String tenDuong;
+    String tenVungQuyHoach;
+    String maMDSDQuyHoach;
+    String oPho;
+    String matDoXD;
+    String danSo;
+    String tangCaoXayDung;
+    String loChucNang;
+    String dienTichGiao;
+    String dienTichQuyHoach;
+    String quyHoach;
+
+
+
     public String getDiaChi() {
         return diaChi;
     }
@@ -44,7 +61,6 @@ public class clsThuaDat {
         this.quyHoach = quyHoach;
     }
 
-    String quyHoach;
 
     public String getIdThua() {
         return idThua;
@@ -126,5 +142,107 @@ public class clsThuaDat {
         this.nguonGoc = nguonGoc;
     }
 
+    public String getViTri() {
+        return viTri;
+    }
 
+    public void setViTri(String viTri) {
+        this.viTri = viTri;
+    }
+
+    public String getMaKVHC() {
+        return maKVHC;
+    }
+
+    public void setMaKVHC(String maKVHC) {
+        this.maKVHC = maKVHC;
+    }
+
+    public String getMaDuong() {
+        return maDuong;
+    }
+
+    public void setMaDuong(String maDuong) {
+        this.maDuong = maDuong;
+    }
+
+    public String getTenDuong() {
+        return tenDuong;
+    }
+
+    public void setTenDuong(String tenDuong) {
+        this.tenDuong = tenDuong;
+    }
+
+    public String getTenVungQuyHoach() {
+        return tenVungQuyHoach;
+    }
+
+    public void setTenVungQuyHoach(String tenVungQuyHoach) {
+        this.tenVungQuyHoach = tenVungQuyHoach;
+    }
+
+    public String getMaMDSDQuyHoach() {
+        return maMDSDQuyHoach;
+    }
+
+    public void setMaMDSDQuyHoach(String maMDSDQuyHoach) {
+        this.maMDSDQuyHoach = maMDSDQuyHoach;
+    }
+
+    public String getoPho() {
+        return oPho;
+    }
+
+    public void setoPho(String oPho) {
+        this.oPho = oPho;
+    }
+
+    public String getMatDoXD() {
+        return matDoXD;
+    }
+
+    public void setMatDoXD(String matDoXD) {
+        this.matDoXD = matDoXD;
+    }
+
+    public String getDanSo() {
+        return danSo;
+    }
+
+    public void setDanSo(String danSo) {
+        this.danSo = danSo;
+    }
+
+    public String getTangCaoXayDung() {
+        return tangCaoXayDung;
+    }
+
+    public void setTangCaoXayDung(String tangCaoXayDung) {
+        this.tangCaoXayDung = tangCaoXayDung;
+    }
+
+    public String getLoChucNang() {
+        return loChucNang;
+    }
+
+    public void setLoChucNang(String loChucNang) {
+        this.loChucNang = loChucNang;
+    }
+
+    public String getDienTichGiao() {
+        return dienTichGiao;
+    }
+
+    public void setDienTichGiao(String dienTichGiao) {
+        this.dienTichGiao = dienTichGiao;
+    }
+
+    public String getDienTichQuyHoach() {
+        return dienTichQuyHoach;
+    }
+
+    public void setDienTichQuyHoach(String dienTichQuyHoach) {
+        this.dienTichQuyHoach = dienTichQuyHoach;
+    }
 }

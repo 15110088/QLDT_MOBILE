@@ -94,6 +94,7 @@ public class AsynTaskLayThongTinThuaDat extends AsyncTask<clsUrl, Void,clsThuaDa
             lblSoThua = (TextView) activityCha.findViewById(R.id.lblSoThua1);
             lblTenChu = (TextView) activityCha.findViewById(R.id.lblTenChu1);
 
+
             lblDienTich =(TextView)activityCha.findViewById(R.id.lblDienTich1);
             lblLoaiDat = (TextView)activityCha.findViewById(R.id.lblLoaiDat1);
        //     lblSoNha=(TextView)activityCha.findViewById(R.id.lblSoNha);

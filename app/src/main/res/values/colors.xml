@@ -2,10 +2,12 @@
 <resources>
     <!-- google's material design colours from
     http://www.google.com/design/spec/style/color.html#color-ui-color-palette -->
-    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimary">#487FFE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="colorScreen">#c0c0c0</color>
+    <color name="colorScreen">#E3E8EF</color>
+    <color name="colorTextSmall">#4A6572</color>
+    <color name="colorTitle">#232F34</color>
 
     <!--reds-->
     <array name="reds">

@@ -106,54 +106,6 @@
         android:layout_width="match_parent"
         style="@style/lblThongTin"/>
 
-    <TextView
-        android:text="Chủ sử dụng:"
-        android:layout_width="match_parent"
-        style="@style/lblView"
-        android:singleLine="true" />
-
-    <TextView
-        android:text="Chủ sử dụng:"
-        android:layout_width="match_parent"
-        style="@style/lblView"
-        android:singleLine="true" />
-    <TextView
-        android:text="Chủ sử dụng:"
-        android:layout_width="match_parent"
-        style="@style/lblView"
-        android:singleLine="true" /> <TextView
-    android:text="Chủ sử dụng:"
-    android:layout_width="match_parent"
-    style="@style/lblView"
-    android:singleLine="true" /> <TextView
-    android:text="Chủ sử dụng:"
-    android:layout_width="match_parent"
-    style="@style/lblView"
-    android:singleLine="true" /> <TextView
-    android:text="Chủ sử dụng:"
-    android:layout_width="match_parent"
-    style="@style/lblView"
-    android:singleLine="true" /> <TextView
-    android:text="Chủ sử dụng:"
-    android:layout_width="match_parent"
-    style="@style/lblView"
-    android:singleLine="true" />
-    <TextView
-        android:text="Chủ sử dụng:"
-        android:layout_width="match_parent"
-        style="@style/lblView"
-        android:singleLine="true" />
-    <TextView
-    android:text="Chủ sử dụng:"
-    android:layout_width="match_parent"
-    style="@style/lblView"
-    android:singleLine="true" />
-    <TextView
-    android:text="Chủ sử dụng:"
-    android:layout_width="match_parent"
-    style="@style/lblView"
-    android:singleLine="true" />
-
 
 
 

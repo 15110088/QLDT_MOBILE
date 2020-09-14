@@ -8,18 +8,19 @@
         android:background="@color/colorScreen"
         android:orientation="vertical"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="@color/white"
-            >
+            android:layout_height="140dp"
+
+            android:background="@color/colorPrimary">
+
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="20dp"
-                android:src="@drawable/ic_baseline_person_24"
-            >
-            </ImageView>
+                android:layout_width="80dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/maphouse"></ImageView>
+
 
             <LinearLayout
                 android:layout_width="300dp"
@@ -27,55 +28,125 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/txtChu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:fontFamily="@font/googlesansbold"
                     android:singleLine="true"
-                    android:text="TÊN CHỦ " />
+                    android:text="*****************"
+                    android:textColor="@color/white"
+                    android:textSize="30sp" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    >
-                    <TextView
-                        style="@style/lblView"
-                        android:layout_width="80dp"
-                        android:singleLine="true"
-                        android:text="Số Tờ:" />
+                    android:gravity="">
 
-                    <TextView
-                        style="@style/lblView"
-                        android:layout_width="80dp"
-                        android:singleLine="true"
-                        android:text="ODT:" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                    <TextView
-                        style="@style/lblView"
-                        android:layout_width="80dp"
-                        android:singleLine="true"
-                        android:text="Số Thửa:" />
+                        <TextView
+                            android:id="@+id/txtSoTo"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/googlesansbold"
+                            android:singleLine="true"
+                            android:text="***"
+                            android:textColor="@color/white"
+                            android:textSize="22sp" />
 
-                    <TextView
-                        style="@style/lblView"
-                        android:layout_width="80dp"
-                        android:singleLine="true"
-                        android:text="ODT:" />
+                        <TextView
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/googlesansregular"
+                            android:singleLine="true"
+                            android:text="Số Tờ"
+                            android:textColor="#E9F3FC"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtSoThua"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/googlesansbold"
+                            android:singleLine="true"
+                            android:text="***"
+                            android:textColor="@color/white"
+
+                            android:textSize="22sp" />
+
+                        <TextView
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/googlesansregular"
+                            android:singleLine="true"
+                            android:text="Số Thửa"
+                            android:textColor="#E9F3FC"
+
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtdientich"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/googlesansbold"
+                            android:singleLine="true"
+                            android:text="***"
+                            android:textColor="@color/white"
+                            android:textSize="22sp" />
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/googlesansregular"
+                            android:singleLine="true"
+                            android:text="Diện tích (m²)"
+                            android:textColor="#E9F3FC"
+
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
+
         <View
             android:id="@+id/view5"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             android:background="@drawable/ic_wave"
 
             />
         <TextView
             android:text="THÔNG TIN THỬA ĐẤT"
             android:layout_margin="10dp"
+            style="@style/lblTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true" />
@@ -83,77 +154,190 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="100dp"
             android:layout_marginHorizontal="20dp"
-            android:elevation="8dp"
+            android:elevation="20dp"
+            app:cardBackgroundColor="#ffffff"
              app:cardCornerRadius="8dp"
             >
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:gravity="center"
+                android:layout_marginTop="20dp"
+                >
+                <TextView
+                    android:text="Số Nhà:"
+                    android:layout_width="80dp"
+                    style="@style/lblBodyBold"
+                    android:singleLine="true" />
+                <TextView
+                    android:text="***"
+                    android:layout_width="80dp"
+                    style="@style/lblBodyRerular"
+                    android:singleLine="true" />
+                <TextView
+                    android:text="Loại Đất:"
+                    android:layout_width="80dp"
+                    style="@style/lblBodyBold"
+
+                    android:singleLine="true" />
+                <TextView
+                    android:text="***"
+                    android:layout_width="80dp"
+                    style="@style/lblBodyRerular"
+                    android:id="@+id/txtLoaiDat"
+                    android:singleLine="true" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="50dp"
+                >
+                <TextView
+                    android:text="Địa Chỉ:"
+                    android:layout_width="80dp"
+                    style="@style/lblBodyBold"
+                    android:singleLine="true" />
+                <TextView
+                    android:text="***"
+                    android:layout_width="240dp"
+                    style="@style/lblBodyRerular"
+                    android:singleLine="true" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                android:layout_marginTop="80dp"
+                >
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:text="THÔNG TIN QUY HOẠCH"
+            android:layout_margin="10dp"
+            style="@style/lblTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true" />
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginHorizontal="20dp"
+            android:elevation="20dp"
+            app:cardBackgroundColor="#ffffff"
+            app:cardCornerRadius="8dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
                 android:layout_marginTop="20dp"
                 >
                 <TextView
                     android:text="Quy Hoạch:"
                     android:layout_width="80dp"
-                    style="@style/lblView"
-                    android:singleLine="true" />
-                <TextView
-                    android:text="ODT:"
-                    android:layout_width="80dp"
-                    style="@style/lblView"
-                    android:singleLine="true" />
-                <TextView
-                    android:text="Diện Tích:"
-                    android:layout_width="80dp"
+                    style="@style/lblBodyBold"
 
-                    style="@style/lblView"
                     android:singleLine="true" />
                 <TextView
-                    android:text="ODT:"
-                    android:layout_width="80dp"
-
-                    style="@style/lblView"
+                    android:text="***"
+                    android:layout_width="240dp"
+                    style="@style/lblBodyRerular"
+                    android:id="@+id/txtQuyHoach"
                     android:singleLine="true" />
+
 
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginTop="20dp"
-
+                android:layout_marginTop="110dp"
                 >
                 <TextView
-                    android:text="Số Nhà:"
+                    android:text="Lô:"
                     android:layout_width="80dp"
-                    style="@style/lblView"
+                    style="@style/lblBodyBold"
                     android:singleLine="true" />
                 <TextView
-                    android:text="ODT:"
+                    android:text="***"
                     android:layout_width="80dp"
-                    style="@style/lblView"
+                    style="@style/lblBodyRerular"
                     android:singleLine="true" />
                 <TextView
-                    android:text="Loại Đất:"
+                    android:text="Ô:"
                     android:layout_width="80dp"
-                    style="@style/lblView"
+                    style="@style/lblBodyBold"
+
                     android:singleLine="true" />
                 <TextView
-                    android:text="ODT:"
+                    android:text="***"
                     android:layout_width="80dp"
-                    style="@style/lblView"
+                    style="@style/lblBodyRerular"
+                    android:id="@+id/txtO"
+                    android:singleLine="true" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="80dp"
+                >
+                <TextView
+                    android:text="Mức Độ Xây dựng:"
+                    android:layout_width="150dp"
+                    style="@style/lblBodyBold"
+                    android:singleLine="true" />
+                <TextView
+                    android:text="***"
+                    android:layout_width="170dp"
+                    style="@style/lblBodyRerular"
+                    android:singleLine="true" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="50dp"
+                >
+                <TextView
+                    android:text="Diện Tích:"
+                    android:layout_width="80dp"
+                    style="@style/lblBodyBold"
+                    android:singleLine="true" />
+                <TextView
+                    android:text="***"
+                    android:layout_width="240dp"
+                    style="@style/lblBodyRerular"
                     android:singleLine="true" />
             </LinearLayout>
 
+
         </androidx.cardview.widget.CardView>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/rvQuyHoach"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp">
         </LinearLayout>
+
 
 
 

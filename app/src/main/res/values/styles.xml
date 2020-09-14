@@ -52,6 +52,29 @@
         <item name="android:textSize">15dp</item>
     </style>
 
+    <style name="lblTitle">
+        <item name="android:textColor">@color/colorTitle</item>
+        <item name="android:fontFamily">@font/googlesansbold</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="lblBodyBold">
+        <item name="android:textColor">@color/colorTitle</item>
+        <item name="android:fontFamily">@font/googlesansbold</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="lblBodyRerular">
+        <item name="android:textColor">@color/colorTitle</item>
+        <item name="android:fontFamily">@font/googlesansregular</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="lblThongTin">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">#2a2a2a</item>

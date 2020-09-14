@@ -11,7 +11,7 @@ public class JsonConvert {
     {
         try {
             JSONObject op = new JSONObject();
-            op.put("maXa", maXa);
+            op.put("maKVHC", maXa);
             op.put("soTo", soTo);
             op.put("soThua", soThua);
             return op.toString();

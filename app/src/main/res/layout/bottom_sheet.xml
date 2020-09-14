@@ -9,22 +9,22 @@
     tools:context=".ThuaDatChiTiet">
 
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@android:id/tabcontent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
 
         <LinearLayout
-            android:id="@+id/tab1"
+            android:id="@+id/lyt_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
             <include layout="@layout/layout_modalthongtinthuadat"></include>
         </LinearLayout>
 
-
-
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 </LinearLayout>
