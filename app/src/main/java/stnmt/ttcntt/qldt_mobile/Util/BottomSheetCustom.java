@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -45,9 +46,10 @@ public class BottomSheetCustom extends BottomSheetDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final BottomSheetDialog dialog= (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
         final View view =View.inflate(getContext(), R.layout.bottom_sheet,null);
-
         dialog.setContentView(view);
         BottomSheetBehavior bottomSheetBehavior =BottomSheetBehavior.from((View) view.getParent());
+
+
         bottomSheetBehavior.setPeekHeight(bottomSheetBehavior.PEEK_HEIGHT_AUTO);
 
 

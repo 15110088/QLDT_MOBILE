@@ -373,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
+
     }
     private void setupMap() {
     //    ArcGISRuntimeEnvironment.setLicense("26bcBUcGIOysj3d4");

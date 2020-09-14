@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +27,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import stnmt.ttcntt.qldt_mobile.Adapter.quyhoachAdapter;
 import stnmt.ttcntt.qldt_mobile.Retrofit.ApiService;
 import stnmt.ttcntt.qldt_mobile.Retrofit.RetrofitSupport;
 import stnmt.ttcntt.qldt_mobile.RetrofitDemo.ConvertMoneyService;
@@ -44,6 +47,7 @@ public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayL
     private static final String TAG_NGUONGOC = "moTa";
     private static final String TAG_CHANGIAODICH= "biChan";
     TextView lblSoTo,lblQH, lblSoThua, lblDienTich,lblLoaiDat, lblTenChu, lblTinhTrangcapGiay,lblSoNha,lblDiaChi,lblChanGD,lblNguonGoc,lblSoNHaTest;
+    RecyclerView rv;
     View activityCha;
     String jsonStr;
     String _soTo="";
@@ -103,33 +107,54 @@ public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayL
 
             ArrayList<clsThuaDat> thuaDats = new ArrayList<clsThuaDat>();
 
-            ServiceHandler sh = new ServiceHandler();
-            clsUrl cls = (clsUrl)params[0];
-            url = cls.getUrl();
-            jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
-            Log.d("Response: ", "> " + jsonStr);
-            if (jsonStr != null) {
-                try {
-                    JSONArray jsonArray = new JSONArray(jsonStr);
-                    if(jsonArray.length() > 0)
-                    {
-                        JSONObject jsonObj;
-                        clsThuaDat thuaDat;
-                        for (int i=0; i< jsonArray.length();i++) {
-                            jsonObj = jsonArray.getJSONObject(i);
-                            thuaDat = new clsThuaDat();
-                            thuaDat.tenVungQuyHoach=jsonObj.getString("tenVungQuyHoach");
-                            thuaDats.add(thuaDat);
-                        }
-                    }
+//            ServiceHandler sh = new ServiceHandler();
+//            clsUrl cls = (clsUrl)params[0];
+//            url = cls.getUrl();
+//            jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
+//            Log.d("Response: ", "> " + jsonStr);
+//            if (jsonStr != null) {
+//                try {
+//                    JSONArray jsonArray = new JSONArray(jsonStr);
+//                    if(jsonArray.length() > 0)
+//                    {
+//                        JSONObject jsonObj;
+//                        clsThuaDat thuaDat;
+//                        for (int i=0; i< jsonArray.length();i++) {
+//                            jsonObj = jsonArray.getJSONObject(i);
+//                            thuaDat = new clsThuaDat();
+//                            thuaDat.tenVungQuyHoach=jsonObj.getString("tenVungQuyHoach");
+//                            thuaDats.add(thuaDat);
+//                        }
+//                    }
+//
+//
+//
+//                } catch (JSONException e) {
+//                    Log.e(getClass().toString(),  e.getMessage());
+//                }
+//            } else {
+//                Log.e("ServiceHandler", "Couldn't get any data from the url"+url);}
+            clsThuaDat td= new clsThuaDat();
+            td.tenVungQuyHoach="Xay cong vien";
+            thuaDats.add(td);
+            clsThuaDat td2= new clsThuaDat();
+            td2.tenVungQuyHoach="Xay nha tro";
+            thuaDats.add(td2);
+
+            clsThuaDat td3= new clsThuaDat();
+            td3.tenVungQuyHoach="Xay khach san";
+            thuaDats.add(td3);
 
 
+            clsThuaDat td4= new clsThuaDat();
+            td3.tenVungQuyHoach="Xay khach san";
+            thuaDats.add(td4);
 
-                } catch (JSONException e) {
-                    Log.e(getClass().toString(),  e.getMessage());
-                }
-            } else {
-                Log.e("ServiceHandler", "Couldn't get any data from the url"+url);}
+
+            clsThuaDat td5= new clsThuaDat();
+            td3.tenVungQuyHoach="Xay khach san";
+            thuaDats.add(td5);
+
             return thuaDats;
 
         }
@@ -148,27 +173,33 @@ public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayL
             lblSoThua = (TextView) activityCha.findViewById(R.id.txtSoThua);
             lblDienTich=(TextView) activityCha.findViewById(R.id.txtdientich);
             lblLoaiDat=(TextView) activityCha.findViewById(R.id.txtLoaiDat);
-            lblQH=(TextView) activityCha.findViewById(R.id.txtQuyHoach);
+            //lblQH=(TextView) activityCha.findViewById(R.id.txtQuyHoach);
+
+            rv=(RecyclerView)activityCha.findViewById(R.id.rvQuyHoach);
+            LinearLayoutManager linearLayoutManager=new LinearLayoutManager(activityCha.getContext(),LinearLayoutManager.VERTICAL,false);
+            rv.setLayoutManager(linearLayoutManager);
+            quyhoachAdapter qh=new quyhoachAdapter(activityCha.getContext(),thuaDat);
+            rv.setAdapter(qh);
 
 
             lblSoTo.setText(_soTo);
             lblSoThua.setText(_soThua);
             lblDienTich.setText(_dienTich);
             lblLoaiDat.setText(_loaiDat);
-            if(thuaDat.size()>0)
-            {
-                String thongtinQH="";
-                for (clsThuaDat item: thuaDat) {
-                    thongtinQH+=item.tenVungQuyHoach;
-                }
-                lblQH.setText(thongtinQH);
-
-
-            }
-            else {
-                lblQH.setText("Không có thông tin ");
-
-            }
+//            if(thuaDat.size()>0)
+//            {
+//                String thongtinQH="";
+//                for (clsThuaDat item: thuaDat) {
+//                    thongtinQH+=item.tenVungQuyHoach;
+//                }
+//                lblQH.setText(thongtinQH);
+//
+//
+//            }
+//            else {
+//                lblQH.setText("Không có thông tin ");
+//
+//            }
 
 
         }catch (Exception ex)
