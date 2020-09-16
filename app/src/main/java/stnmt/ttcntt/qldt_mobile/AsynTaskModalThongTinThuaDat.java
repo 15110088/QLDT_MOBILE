@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xml.sax.Parser;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,7 +47,7 @@ public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayL
     private static final String TAG_QUYHOACH = "quyHoach";
     private static final String TAG_NGUONGOC = "moTa";
     private static final String TAG_CHANGIAODICH= "biChan";
-    TextView lblSoTo,lblQH, lblSoThua, lblDienTich,lblLoaiDat, lblTenChu, lblTinhTrangcapGiay,lblSoNha,lblDiaChi,lblChanGD,lblNguonGoc,lblSoNHaTest;
+    TextView lblSoTo,txtSoVungQuyHoach, lblSoThua, lblDienTich,lblLoaiDat, lblTenChu, lblTinhTrangcapGiay,lblSoNha,lblDiaChi,lblChanGD,lblNguonGoc,lblSoNHaTest;
     RecyclerView rv;
     View activityCha;
     String jsonStr;
@@ -106,54 +107,58 @@ public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayL
     protected ArrayList<clsThuaDat> doInBackground(clsUrl... params) {
 
             ArrayList<clsThuaDat> thuaDats = new ArrayList<clsThuaDat>();
-
-//            ServiceHandler sh = new ServiceHandler();
-//            clsUrl cls = (clsUrl)params[0];
-//            url = cls.getUrl();
-//            jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
-//            Log.d("Response: ", "> " + jsonStr);
-//            if (jsonStr != null) {
-//                try {
-//                    JSONArray jsonArray = new JSONArray(jsonStr);
-//                    if(jsonArray.length() > 0)
-//                    {
-//                        JSONObject jsonObj;
-//                        clsThuaDat thuaDat;
-//                        for (int i=0; i< jsonArray.length();i++) {
-//                            jsonObj = jsonArray.getJSONObject(i);
-//                            thuaDat = new clsThuaDat();
-//                            thuaDat.tenVungQuyHoach=jsonObj.getString("tenVungQuyHoach");
-//                            thuaDats.add(thuaDat);
-//                        }
-//                    }
+            ServiceHandler sh = new ServiceHandler();
+            clsUrl cls = (clsUrl)params[0];
+            url = cls.getUrl();
+            jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
+            Log.d("Response: ", "> " + jsonStr);
+            if (jsonStr != null) {
+                try {
+                    JSONArray jsonArray = new JSONArray(jsonStr);
+                    if(jsonArray.length() > 0)
+                    {
+                        JSONObject jsonObj;
+                        clsThuaDat thuaDat;
+                        for (int i=0; i< jsonArray.length();i++) {
+                            jsonObj = jsonArray.getJSONObject(i);
+                            thuaDat = new clsThuaDat();
+                            thuaDat.tenVungQuyHoach=jsonObj.getString("tenVungQuyHoach");
+                            thuaDat.tangCaoXayDung=jsonObj.getString("tangCaoXayDung");
+                            thuaDat.matDoXD=jsonObj.getString("matDoXD");
+                            thuaDat.danSo=jsonObj.getString("danSo");
+                            thuaDat.loChucNang=jsonObj.getString("loChucNang");
+                            thuaDat.oPho=jsonObj.getString("oPho");
+                            thuaDat.dienTichQuyHoach=jsonObj.getString("dienTichQuyHoach");
+                            thuaDat.maMDSDQuyHoach=jsonObj.getString("maMDSDQuyHoach");
+                            thuaDat.dienTichGiao=jsonObj.getString("dienTichGiao");
+                            thuaDats.add(thuaDat);
+                        }
+                    }
+                } catch (JSONException e) {
+                    Log.e(getClass().toString(),  e.getMessage());
+                }
+            } else {
+                Log.e("ServiceHandler", "Couldn't get any data from the url"+url);}
+//            clsThuaDat td= new clsThuaDat();
+//            td.tenVungQuyHoach="Xay cong vien";
+//            thuaDats.add(td);
+//            clsThuaDat td2= new clsThuaDat();
+//            td2.tenVungQuyHoach="Xay nha tro";
+//            thuaDats.add(td2);
+//
+//            clsThuaDat td3= new clsThuaDat();
+//            td3.tenVungQuyHoach="Xay khach san";
+//            thuaDats.add(td3);
 //
 //
+//            clsThuaDat td4= new clsThuaDat();
+//            td3.tenVungQuyHoach="Xay khach san";
+//            thuaDats.add(td4);
 //
-//                } catch (JSONException e) {
-//                    Log.e(getClass().toString(),  e.getMessage());
-//                }
-//            } else {
-//                Log.e("ServiceHandler", "Couldn't get any data from the url"+url);}
-            clsThuaDat td= new clsThuaDat();
-            td.tenVungQuyHoach="Xay cong vien";
-            thuaDats.add(td);
-            clsThuaDat td2= new clsThuaDat();
-            td2.tenVungQuyHoach="Xay nha tro";
-            thuaDats.add(td2);
-
-            clsThuaDat td3= new clsThuaDat();
-            td3.tenVungQuyHoach="Xay khach san";
-            thuaDats.add(td3);
-
-
-            clsThuaDat td4= new clsThuaDat();
-            td3.tenVungQuyHoach="Xay khach san";
-            thuaDats.add(td4);
-
-
-            clsThuaDat td5= new clsThuaDat();
-            td3.tenVungQuyHoach="Xay khach san";
-            thuaDats.add(td5);
+//
+//            clsThuaDat td5= new clsThuaDat();
+//            td3.tenVungQuyHoach="Xay khach san";
+//            thuaDats.add(td5);
 
             return thuaDats;
 
@@ -172,34 +177,26 @@ public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayL
             lblSoTo = (TextView) activityCha.findViewById(R.id.txtSoTo);
             lblSoThua = (TextView) activityCha.findViewById(R.id.txtSoThua);
             lblDienTich=(TextView) activityCha.findViewById(R.id.txtdientich);
-            lblLoaiDat=(TextView) activityCha.findViewById(R.id.txtLoaiDat);
+            //lblLoaiDat=(TextView) activityCha.findViewById(R.id.txtLoaiDat);
+            txtSoVungQuyHoach=(TextView) activityCha.findViewById(R.id.txtSoVungQuyHoach);
             //lblQH=(TextView) activityCha.findViewById(R.id.txtQuyHoach);
 
             rv=(RecyclerView)activityCha.findViewById(R.id.rvQuyHoach);
             LinearLayoutManager linearLayoutManager=new LinearLayoutManager(activityCha.getContext(),LinearLayoutManager.VERTICAL,false);
             rv.setLayoutManager(linearLayoutManager);
+            rv.hasFixedSize();
             quyhoachAdapter qh=new quyhoachAdapter(activityCha.getContext(),thuaDat);
+
+
             rv.setAdapter(qh);
+
 
 
             lblSoTo.setText(_soTo);
             lblSoThua.setText(_soThua);
             lblDienTich.setText(_dienTich);
-            lblLoaiDat.setText(_loaiDat);
-//            if(thuaDat.size()>0)
-//            {
-//                String thongtinQH="";
-//                for (clsThuaDat item: thuaDat) {
-//                    thongtinQH+=item.tenVungQuyHoach;
-//                }
-//                lblQH.setText(thongtinQH);
-//
-//
-//            }
-//            else {
-//                lblQH.setText("Không có thông tin ");
-//
-//            }
+            txtSoVungQuyHoach.setText("("+ thuaDat.size()+")");
+
 
 
         }catch (Exception ex)

@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private String soTo = "";
     private String soThua = "";
     private String dienTich = "";
-    private String _tieuDe = "";
+    private String _tieuDe = "Xã Phước Tân";
     private String loaiDat="";
     private String loaiQH ="";
     LayoutInflater inflater;
@@ -142,12 +142,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Boolean isBusy = false;
     boolean _enableGPS = false;
     boolean _isLayerQH = false;
-    //LocationDisplayManager lDisplayManager = null;
     RouteTask routeTask;
-  //  List<Point> lstPath;
     List<String> lstSoNha=null;
     List<String> lstKQSoNha=null;
-    private String urlServiceThongTin="http://192.169.3.197/DTBienHoa/ServicesViTri.svc";
+    private String urlServiceThongTin="http://stnmt.dongnai.gov.vn:8080/Dothibienhoa/ServicesViTri.svc/";
 
     private BottomSheetBehavior bottomSheetBehavior;
     private ToggleButton tbUpDown;
@@ -176,33 +174,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             setupNavigationDrawerContent(navigationView);
         }
         setupNavigationDrawerContent(navigationView);
-        try {
-
-            Bundle bundle = getIntent().getExtras();
-            _maXa = bundle.getString("strMaKvHc");
-            _maHuyen = bundle.getString("strMaKvHcCha");
-            _tieuDe = bundle.getString("strTenKvHc");
-            actionBar.setTitle(_tieuDe.substring(0, 1).toUpperCase() + _tieuDe.substring(1));
-            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("MaHuyenSharedPreferences", _maHuyen);
-            editor.putString("MaXaSharedPreferences", _maXa);
-            editor.putString("TieuDeSharedPreferences", _tieuDe);
-            editor.apply();
-            soTo = bundle.getString("strSoTo");
-            soThua = bundle.getString("strSoThua");
-            /*String user=sharedPref.getString("AccountSharedPreferences","");
-            String pass=sharedPref.getString("PasswordSharedPreferences","");
-            if(user!=""&&pass!="")
-                DangNhap(user,pass);*/
-        } catch (Exception ex) {
-        }
+//        try {
+//
+//            Bundle bundle = getIntent().getExtras();
+//            _maXa = bundle.getString("strMaKvHc");
+//            _maHuyen = bundle.getString("strMaKvHcCha");
+//            _tieuDe = bundle.getString("strTenKvHc");
+//            actionBar.setTitle(_tieuDe.substring(0, 1).toUpperCase() + _tieuDe.substring(1));
+//            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+//            SharedPreferences.Editor editor = sharedPref.edit();
+//            editor.putString("MaHuyenSharedPreferences", _maHuyen);
+//            editor.putString("MaXaSharedPreferences", _maXa);
+//            editor.putString("TieuDeSharedPreferences", _tieuDe);
+//            editor.apply();
+//            soTo = bundle.getString("strSoTo");
+//            soThua = bundle.getString("strSoThua");
+//            /*String user=sharedPref.getString("AccountSharedPreferences","");
+//            String pass=sharedPref.getString("PasswordSharedPreferences","");
+//            if(user!=""&&pass!="")
+//                DangNhap(user,pass);*/
+//        } catch (Exception ex) {
+//        }
         if (_maHuyen == null || _maHuyen.isEmpty()) CheckLastDaTa();
-        String url = GetMapServicesUrl(_maHuyen, _maXa);
-        String urlNen=GetMapServicesUrl();
-        String urlSoNha=GetMapServicesUrlSoNha(_maXa);
-        String urlDoThiBienHoaRanhThua=GetMapServicesUrlQLDT("731","26377");
-
+        actionBar.setTitle(_tieuDe);
         actionBar.setCustomView(R.layout.search_bar);
         edtSeach = (AutoCompleteTextView) actionBar.getCustomView().findViewById(R.id.edtSearch); //the text editor
         //this is a listener to do a search when the user clicks on search button
@@ -227,10 +221,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        ServiceFeatureTable  mServiceFeatureTable2=new ServiceFeatureTable(urlSoNha);
-        FeatureLayer mFeatureLayer2=new FeatureLayer(mServiceFeatureTable2);
-       // String url1 = GetMapServicesUrl(_maHuyen, _maXa)+"/0";
-       // String url2 = GetMapServicesUrlQLDT("731", "26377")+"/1";
         String url1="https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/DOTHIBIENHOA/26377/MapServer/0";
         mServiceFeatureTable=new ServiceFeatureTable(url1);
         mServiceFeatureTable.setCredential(user);
@@ -259,50 +249,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         ArcGISMap map = mMapView.getMap();
-        ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer("https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/DOTHIBIENHOA/PhanKhu_26377/MapServer");
-        tiledLayer.setCredential(user);
-
-        ArcGISMapImageLayer tiledLayerNen = new ArcGISMapImageLayer(urlNen);
-        ArcGISMapImageLayer tiledLayerSoNha = new ArcGISMapImageLayer(urlSoNha);
-
-        //Test Search Layer
-//        tiledLayerQLDTRanhThua = new ArcGISMapImageLayer(urlDoThiBienHoaRanhThua);
-//        UserCredential user = new UserCredential("bienhoa", "Stnmt75731");
-//        tiledLayerQLDTRanhThua.setCredential(user);
-//        mServiceFeatureTable.setCredential(user);
-//        graphicsOverlay = new GraphicsOverlay();
-//        mMapView.getGraphicsOverlays().add(graphicsOverlay);
-//        tiledLayerQLDTRanhThua.addDoneLoadingListener(()-> {
-//                    if (tiledLayerQLDTRanhThua.getLoadStatus() == LoadStatus.LOADED) {
-//                        SubRanhThua = (ArcGISMapImageSublayer) tiledLayerQLDTRanhThua.getSublayers().get(1);
-//                        SubRanhThua.setCredential(user);
-//                        SubRanhThua.loadAsync();
-//                    }
-//        });
-//
-        // map.getBasemap().getBaseLayers().add(tiledLayer);
-//        map.getBasemap().getBaseLayers().add(tiledLayerNen);
-//        map.getBasemap().getBaseLayers().add(tiledLayerSoNha);
-//        map.getBasemap().getBaseLayers().add(mFeatureLayer);
-
-        //Test
-//        ArcGISMapImageLayer tiledLayerQH = new ArcGISMapImageLayer ("https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/DOTHIBIENHOA/PhanKhu_26377/MapServer");
-//        tiledLayerQH.setCredential(user);
-//        tiledLayerQH.loadAsync();
-//        tiledLayerQH.addDoneLoadingListener(()->{
-//            if (tiledLayerQH.getLoadStatus() == LoadStatus.LOADED) {
-//                Toast.makeText(this, "Load Lop QH ", Toast.LENGTH_LONG).show();
-//            }
-//            else {
-//                String error = "Error loading ENC layer: " + tiledLayerQH.getLoadError().getMessage();
-//                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-//                Log.e("OK", error);
-//            }
-//        });
-
-
-
-
         map.getBasemap().getBaseLayers().add(mFeatureLayerMauQH);
         map.getOperationalLayers().add(mFeatureLayer);
 
@@ -315,7 +261,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         QueryParameters populationQuery = new QueryParameters();
         populationQuery.setWhereClause("SH_TO = 58" );
         btntest=findViewById(R.id.btntest);
-
         btntest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -376,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
     private void setupMap() {
-    //    ArcGISRuntimeEnvironment.setLicense("26bcBUcGIOysj3d4");
+        ArcGISRuntimeEnvironment.setLicense("runtimelite,1000,rud6806025350,none,1JPJD4SZ8Y4DRJE15232");
         mMapView = findViewById(R.id.mapView);
         if (mMapView != null) {
             Basemap.Type basemapType = Basemap.Type.OPEN_STREET_MAP;
@@ -403,11 +348,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             case R.id.item_kvhc_huyen:
                                 menuItem.setChecked(true);
                                 drawerLayout.closeDrawer(GravityCompat.START);
-                                Intent intenCapXa = new Intent(MainActivity.this,ChonHuyen.class);
+                                Intent intenCapXa = new Intent(MainActivity.this,ChonXaActivity.class);
                                 Bundle bundle = new Bundle();
-                                bundle.putString("strMaKvHc", "740");
+                                bundle.putString("strMaKvHc", "731");
                                 bundle.putString("strMaKvHcCha", "75");
-                                bundle.putString("strTenHuyen","Huyện Long Thành");
+                                bundle.putString("strTenHuyen","TP Biên Hòa");
                                 intenCapXa.putExtras(bundle);
                                 startActivity(intenCapXa);
                                //startActivityForResult(intenCapXa, 3);

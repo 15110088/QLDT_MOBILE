@@ -1,6 +1,8 @@
 package stnmt.ttcntt.qldt_mobile;
 
 
+import android.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -80,9 +82,11 @@ public class ServiceHandler {
             response= readStream(stream);
 
         } catch (UnsupportedEncodingException e) {
-            //e.printStackTrace();
+            Log.e("GET METHOT 1: ", "> " + e.getMessage());
+
         }  catch (IOException e) {
-            //e.printStackTrace();
+            Log.e("GET METHOT 2: ", "> " + e.getMessage());
+
         }
         return response;
 

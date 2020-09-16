@@ -17,7 +17,7 @@ public class AsynTaskKVHC extends AsyncTask<Void, Void, ArrayList<clsKvHc>> {
     Activity activityCha;
     //String url ="http://stnmt.dongnai.gov.vn:8080/quanlydatwebservicelongan/QuanLyDatWebService.svc/LayDonViHanhChinhCon?maKvhc=80";
    // String url ="http://stnmt.dongnai.gov.vn:8080/ServicesSoNhaLongThanh/ServicesViTri.svc/LayDonViHanhChinhCon?maKvhc=740";
-   String url ="http://stnmt.dongnai.gov.vn:8080/quanlydatwebservice/QuanLyDatWebService.svc/LayDonViHanhChinhCon?maKvhc=75";
+   String url ="http://stnmt.dongnai.gov.vn:8080/Dothibienhoa/ServicesViTri.svc/LayDonViHanhChinhCon?maKvhc=75";
     private static  final String TAG_MAKVHC = "maKvhc";
     private static final String TAG_TEN ="ten";
     private static final String TAG_MACHA="maKvhcCha";

@@ -65,7 +65,7 @@ public class BottomSheetCustom extends BottomSheetDialogFragment {
 
             String paraEncode = Uri.encode(enData);
             // Bundle bundle = getIntent().getExtras();
-            String urlServiceThongTin="http://192.169.3.197/DTBienHoa/ServicesViTri.svc/";
+            String urlServiceThongTin="http://stnmt.dongnai.gov.vn:8080/Dothibienhoa/ServicesViTri.svc/";
             url = urlServiceThongTin+ "LayThongTinQuyHoach?thamSo="+paraEncode;
             clsUrl clsTT = new clsUrl(url,coQuyen,_dienTich,_loaiDat);
             AsynTaskModalThongTinThuaDat asynLayTT = new AsynTaskModalThongTinThuaDat(view,_soTo,_soThua,_dienTich,_loaiDat,paraEncode);

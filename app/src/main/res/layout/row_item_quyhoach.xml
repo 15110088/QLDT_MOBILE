@@ -13,7 +13,7 @@
     </LinearLayout>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="210dp"
         android:elevation="20dp"
         app:cardBackgroundColor="#ffffff"
         app:cardCornerRadius="8dp"
@@ -27,7 +27,7 @@
             >
             <TextView
                 android:text="Quy Hoạch:"
-                android:layout_width="80dp"
+                android:layout_width="90dp"
                 style="@style/lblBodyBold"
 
                 android:singleLine="true" />
@@ -40,6 +40,80 @@
 
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="50dp"
+            >
+            <TextView
+                android:text="Diện Tích QH:"
+                android:layout_width="130dp"
+                style="@style/lblBodyBold"
+                android:singleLine="true" />
+            <TextView
+                android:text="***"
+                android:layout_width="200dp"
+                style="@style/lblBodyRerular"
+                android:id="@+id/txtdientich"
+                android:singleLine="true" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="80dp"
+            >
+            <TextView
+                android:text="Diện Tích Giao:"
+                android:layout_width="140dp"
+                style="@style/lblBodyBold"
+                android:singleLine="true" />
+            <TextView
+                android:text="***"
+                android:layout_width="190dp"
+                style="@style/lblBodyRerular"
+                android:id="@+id/txtdientichGiao"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="170dp"
+            >
+            <TextView
+                android:text="Tằng Cao XD:"
+                android:layout_width="110dp"
+                style="@style/lblBodyBold"
+                android:singleLine="true" />
+            <TextView
+                android:text="***"
+                android:layout_width="50dp"
+                style="@style/lblBodyRerular"
+                android:id="@+id/txtTangXayDung"
+                android:singleLine="true" />
+
+            <TextView
+                android:text="Mục Đích SD:"
+                android:layout_width="100dp"
+                style="@style/lblBodyBold"
+                android:singleLine="true" />
+            <TextView
+                android:text="***"
+                android:layout_width="70dp"
+                style="@style/lblBodyRerular"
+                android:id="@+id/txtMDSD"
+                android:singleLine="true" />
+
+
+
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,17 +121,7 @@
             android:layout_marginTop="110dp"
             >
             <TextView
-                android:text="Lô:"
-                android:layout_width="80dp"
-                style="@style/lblBodyBold"
-                android:singleLine="true" />
-            <TextView
-                android:text="***"
-                android:layout_width="80dp"
-                style="@style/lblBodyRerular"
-                android:singleLine="true" />
-            <TextView
-                android:text="Ô:"
+                android:text="Ô Phố:"
                 android:layout_width="80dp"
                 style="@style/lblBodyBold"
 
@@ -68,40 +132,60 @@
                 style="@style/lblBodyRerular"
                 android:id="@+id/txtO"
                 android:singleLine="true" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="80dp"
-            >
             <TextView
-                android:text="Mức Độ Xây dựng:"
-                android:layout_width="150dp"
+                android:text="Lô Đất Chức Năng:"
+                android:layout_width="130dp"
                 style="@style/lblBodyBold"
                 android:singleLine="true" />
             <TextView
                 android:text="***"
-                android:layout_width="170dp"
+                android:layout_width="40dp"
                 style="@style/lblBodyRerular"
+                android:id="@+id/txtLo"
                 android:singleLine="true" />
+
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="140dp"
             >
             <TextView
-                android:text="Diện Tích:"
+                android:text="Mật Độ XD:"
                 android:layout_width="80dp"
                 style="@style/lblBodyBold"
                 android:singleLine="true" />
             <TextView
                 android:text="***"
-                android:layout_width="240dp"
+                android:layout_width="80dp"
                 style="@style/lblBodyRerular"
+                android:id="@+id/txtMatDoXayDung"
+
                 android:singleLine="true" />
+
+            <TextView
+                android:text="Dân Số (người):"
+                android:layout_width="110dp"
+                style="@style/lblBodyBold"
+                android:singleLine="true" />
+            <TextView
+                android:text="***"
+                android:layout_width="60dp"
+                style="@style/lblBodyRerular"
+                android:id="@+id/txtDanSo"
+                android:singleLine="true" />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="140dp"
+            >
+
         </LinearLayout>
 
 

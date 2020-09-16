@@ -72,23 +72,26 @@
             android:background="?android:attr/selectableItemBackground"/>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/btntest"
-            android:layout_gravity="right|bottom"
-            android:src="@drawable/layernoselect"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="50dp"
-            android:background="?android:attr/selectableItemBackground"/>
-        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnLayerQH"
             android:layout_gravity="right|bottom"
-            android:src="@drawable/layerselect"
+            android:layout_marginRight="50dp"
             android:layout_marginBottom="10dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/layernoselect"
+            android:visibility="invisible" />
+
+        <ImageButton
+            android:id="@+id/btnLayerQH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
             android:layout_marginRight="120dp"
-            android:background="?android:attr/selectableItemBackground"/>
+            android:layout_marginBottom="10dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/layerselect"
+            android:visibility="invisible" />
 
 
     </FrameLayout>
