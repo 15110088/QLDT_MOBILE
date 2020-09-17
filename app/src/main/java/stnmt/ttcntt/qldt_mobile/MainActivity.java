@@ -1,5 +1,6 @@
 package stnmt.ttcntt.qldt_mobile;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.location.LocationListener;
 import android.net.Uri;
@@ -27,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -37,6 +40,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -439,21 +443,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     try {
                         IdentifyLayerResult identifyLayerResult = identifyLayerResultListenableFuture.get();
                         // create a textview to display field values
-                                        View calloutView = inflater.inflate(R.layout.sqmi, null);
-                            TextView noiDung = (TextView) calloutView.findViewById(R.id.thongTinDoHoa);
-                          ImageButton imgButtonInfor = (ImageButton) calloutView.findViewById(R.id.infor);
-//                        TextView calloutContent = new TextView(getApplicationContext());
-//                        calloutContent.setTextColor(Color.BLACK);
-//                        calloutContent.setSingleLine(false);
-//                        calloutContent.setVerticalScrollBarEnabled(true);
-//                        calloutContent.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
-//                        calloutContent.setMovementMethod(new ScrollingMovementMethod());
-//                        calloutContent.setLines(5);
-
-
+                        View calloutView = inflater.inflate(R.layout.sqmi, null);
+                        TextView noiDung = (TextView) calloutView.findViewById(R.id.thongTinDoHoa);
+                        ImageButton imgButtonInfor = (ImageButton) calloutView.findViewById(R.id.infor);
                         for (GeoElement element : identifyLayerResult.getElements()) {
                             Feature feature = (Feature) element;
-                           
                             if(_isLayerQH)
                             {
                                 mFeatureLayerMauQH.selectFeature(feature);
@@ -511,11 +505,65 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                            View view = getLayoutInflater().inflate(R.layout.bottom_sheet, null);
 //                            bottomSheet= new BottomSheetDialog(MainActivity.this);
 //                            bottomSheet.setContentView(view);
-                            bottomSheet = new BottomSheetCustom(_maXa,soTo,soThua,dienTich,loaiDat);
+                            if(!_isLayerQH)
+                            {
+//                                LinearLayout linearLayout = findViewById(R.id.lyt_layout);
+//                                bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
+//                                bottomSheet = new BottomSheetCustom(_maXa,soTo,soThua,dienTich,loaiDat);
+//                                bottomSheet.show(getSupportFragmentManager(),bottomSheet.getTag());
+                               // final View view =View.inflate(getApplicationContext(), R.layout.bottom_sheet,null);
+                                LinearLayout linearLayout= findViewById(R.id.lyt_layout);
+                                bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
+                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                bottomSheetBehavior.setPeekHeight(1300);
+                                String data = JsonConvert.ConvertQueryThua(_maXa, Integer.parseInt(soTo), soThua);
+                                String key = "SoNhaajlkuoin1285sdfjk9LongThanh";
+                                String iv="IVsdfsdfgdf487LT";
+                                String url ="";
+                                try {
+                                    CryptLib cry = new CryptLib();
+                                    String enData = cry.encrypt(data, key, iv);
+                                    String paraEncode = Uri.encode(enData);
+                                    String urlServiceThongTin="http://stnmt.dongnai.gov.vn:8080/Dothibienhoa/ServicesViTri.svc/";
+                                    url = urlServiceThongTin+ "LayThongTinQuyHoach?thamSo="+paraEncode;
+                                    clsUrl clsTT = new clsUrl(url,true,dienTich,loaiDat);
+                                    AsynTaskModalThongTinThuaDat asynLayTT = new AsynTaskModalThongTinThuaDat(linearLayout,soTo,soThua,dienTich,loaiDat,paraEncode);
+                                    asynLayTT.execute(clsTT);
+                                }
+                                catch (Exception e)
+                                {
 
-                            bottomSheet.show(getSupportFragmentManager(),bottomSheet.getTag());
+                                }
+
+                                bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                                    @Override
+                                    public void onStateChanged(@NonNull View view, int i) {
+
+                                        switch(i)
+                                        {
+                                            case BottomSheetBehavior.STATE_EXPANDED:
+                                                ShowView(linearLayout,1300);
+                                                Toast.makeText(getApplicationContext(), "EXPANED", Toast.LENGTH_SHORT).show();
+                                                break;
+                                            case BottomSheetBehavior.STATE_COLLAPSED:
+                                                ShowView(linearLayout,350);
+                                                Toast.makeText(getApplicationContext(), "Colapse", Toast.LENGTH_SHORT).show();
+                                                break;
+                                        }
 
 
+
+                                    }
+
+                                    @Override
+                                    public void onSlide(@NonNull View view, float v) {
+
+                                    }
+                                });
+
+
+
+                            }
                             // show callout
                             noiDung.setText(strContent);
                             imgButtonInfor.setOnClickListener(new View.OnClickListener() {
@@ -530,7 +578,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                     bundle.putString("strDienTich", dienTich);
                                     bundle.putString("strLoaiDat", loaiDat);
                                    // Intent intent = new Intent(MainActivity.this, ThuaDatChiTiet.class);
-                                    bottomSheet.show(getSupportFragmentManager(),bottomSheet.getTag());
+                                    if(!_isLayerQH) {
+                                      //  bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+                                    }
                                     //  intent.putExtras(bundle);
                                     //startActivity(intent);
 
@@ -541,18 +591,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             mCallout = mMapView.getCallout();
                             mCallout.setLocation(mapPoint);
                             mCallout.setContent(calloutView);
-                            mCallout.show();
+                         //   mCallout.show();
+
                         }
                     } catch (Exception e1) {
                         Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e1.getMessage());
                     }
                 });
 
-
-
                 return true;
             }
         });
+    }
+
+    private void HideView(View view) {
+        ViewGroup.LayoutParams params=view.getLayoutParams();
+        params.height=0;
+        view.setLayoutParams(params);
+
+    }
+    private void ShowView(View view,int size) {
+        ViewGroup.LayoutParams params=view.getLayoutParams();
+        params.height=size;
+        view.setLayoutParams(params);
+
+    }
+    private int GetActionBarsize()
+    {
+        final TypedArray typedArray=getApplicationContext().getTheme().obtainStyledAttributes(new int[]{
+                R.attr.actionBarSize
+        });
+        return  (int) typedArray.getDimension(0,0);
     }
     //Ham dong, mo edidtext search
     protected void handleMenuSearch(){
@@ -668,9 +737,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             {
                 String str1 = strS[0];
                 String str2 = strS[1];
-
-
-
 //                     SimpleMarkerSymbol citySymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000, 16);
 //
 //                        graphicsOverlay.getGraphics().clear();
@@ -695,7 +761,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     CryptLib cry = new CryptLib();
                     String enData = cry.encrypt(data,key,iv);
                     String paraEncode = URLEncoder.encode(enData);
-                    //String url = String.format("http://stnmt.dongnai.gov.vn:8080/quanlydatwebservicelongan/QuanLyDatWebService.svc/LayThuaChuLongAnEpt?thamSo=%s", paraEncode);
                     String url = String.format(urlServiceThongTin+"timSoNhaByChuEpt?thamSo=%s", paraEncode);
                     Bundle bundle = new Bundle();
                     bundle.putString("strUrl", url);
@@ -731,11 +796,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if(isBusy) return;
         isBusy = true;
         try{
-
             if (soToTim != null && soToTim.length() > 0) {
                 QueryParameters queryParameters = new QueryParameters();
                 queryParameters.setWhereClause("SH_TO =" + soToTim + " and SH_THUA=" + soThuaTim + " ");
-
                 try {
                     final ListenableFuture<FeatureQueryResult> future = mServiceFeatureTable.queryFeaturesAsync(queryParameters);
                     future.addDoneListener(new Runnable() {
@@ -854,15 +917,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         soTo = data.getStringExtra("strSoTo");
                         soThua = data.getStringExtra("strSoThua");
                         TimKiemThuaDat(soTo, soThua);
-//                        ImageButton imgButtonGPS = (ImageButton) findViewById(R.id.imgThuaChu);
-//                        imgButtonGPS.setVisibility(View.VISIBLE);
-//                        imgButtonGPS.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                if (_intentThuaChu != null)
-//                                    startActivityForResult(_intentThuaChu, 1);
-//                            }
-//                        });
                     }
                 }
                 if (resultCode == Activity.RESULT_CANCELED) {
@@ -906,9 +960,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     map.getBasemap().getBaseLayers().add(tiledLayer);
                     map.getBasemap().getBaseLayers().add(tiledLayerSoNha);
-
-
-
                     ZoomToXa(mMapView, _maXa);
 
                     layDuLieu();
@@ -1078,8 +1129,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             QueryParameters q = new QueryParameters();
             q.setWhereClause(String.format("MASO =%s",maXa));
             q.setReturnGeometry(true);
-            //q.setInSpatialReference(mMapView.getSpatialReference());
-            //q.setSpatialRelationship(SpatialRelationship.INTERSECTS);
             final ListenableFuture<FeatureQueryResult> future = mServiceFeatureTableZoom.queryFeaturesAsync(q);
             future.addDoneListener(new Runnable() {
                 @Override
@@ -1111,7 +1160,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         }
     }
-
 
     public void ZoomToGPS() {
         try {

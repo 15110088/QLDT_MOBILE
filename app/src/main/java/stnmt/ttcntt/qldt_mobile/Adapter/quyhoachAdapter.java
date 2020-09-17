@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import stnmt.ttcntt.qldt_mobile.Interface.ItemClickListener;
 import stnmt.ttcntt.qldt_mobile.R;
 import stnmt.ttcntt.qldt_mobile.clsThuaDat;
 
@@ -21,10 +23,12 @@ public class quyhoachAdapter extends RecyclerView.Adapter<quyhoachAdapter.ViewHo
 
     Context c;
     List<clsThuaDat> dataThuaDat;
-    public quyhoachAdapter(Context c,List<clsThuaDat> data) {
+    private ItemClickListener itemClickListener;
+
+    public quyhoachAdapter(Context c,List<clsThuaDat> data,ItemClickListener _iItemClickListener) {
         this.c=c;
         this.dataThuaDat=data;
-
+        this.itemClickListener=_iItemClickListener;
     }
 
     @NonNull
@@ -82,14 +86,17 @@ public class quyhoachAdapter extends RecyclerView.Adapter<quyhoachAdapter.ViewHo
             holder.txtMDSD.setText(td.getMaMDSDQuyHoach());
             holder.txtDienTichGiao.setText(td.getDienTichGiao()+ " (m²)");
 
-
         }
     }
+
 
     @Override
     public int getItemCount() {
         return dataThuaDat.size();
     }
+
+
+
 
     public class  ViewHolder extends  RecyclerView.ViewHolder {
         TextView txtQH,txtLo,txtO,txtTangXayDung,txtMatDoXayDung,txtDanSo,txtDienTich,txtDienTichGiao,txtMDSD;
@@ -106,8 +113,15 @@ public class quyhoachAdapter extends RecyclerView.Adapter<quyhoachAdapter.ViewHo
                 txtDienTich = itemView.findViewById(R.id.txtdientich);
                 txtDienTichGiao = itemView.findViewById(R.id.txtdientichGiao);
                 txtMDSD=itemView.findViewById(R.id.txtMDSD);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        itemClickListener.onClick(v,getAdapterPosition(),false);
 
+                    }
+                });
             }
         }
+
     }
 }

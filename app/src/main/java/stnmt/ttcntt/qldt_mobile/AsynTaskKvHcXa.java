@@ -50,7 +50,7 @@ public class AsynTaskKvHcXa extends AsyncTask<String, Void, ArrayList<clsKvHc>> 
                         objKvHc = new clsKvHc();
                         objKvHc.maKvhc = jsonObject.getString(TAG_MAKVHC);
                         objKvHc.ten = jsonObject.getString(TAG_TEN);
-                        objKvHc.maKvhcCha = "740";
+                        objKvHc.maKvhcCha = "731";
                         lstRs.add(objKvHc);
                     }
                 }

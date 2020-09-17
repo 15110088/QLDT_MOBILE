@@ -33,8 +33,6 @@ public class BottomSheetCustom extends BottomSheetDialogFragment {
     private LinearLayout linearLayout;
     public  BottomSheetCustom(String maXa,String soTo,String soThua,String dientich,String loaiDat)
     {
-
-
         this._soTo=soTo;
         this._soThua=soThua;
         this._dienTich=dientich;
@@ -62,9 +60,7 @@ public class BottomSheetCustom extends BottomSheetDialogFragment {
         try {
             CryptLib cry = new CryptLib();
             String enData = cry.encrypt(data, key, iv);
-
             String paraEncode = Uri.encode(enData);
-            // Bundle bundle = getIntent().getExtras();
             String urlServiceThongTin="http://stnmt.dongnai.gov.vn:8080/Dothibienhoa/ServicesViTri.svc/";
             url = urlServiceThongTin+ "LayThongTinQuyHoach?thamSo="+paraEncode;
             clsUrl clsTT = new clsUrl(url,coQuyen,_dienTich,_loaiDat);
@@ -75,10 +71,7 @@ public class BottomSheetCustom extends BottomSheetDialogFragment {
         {
 
         }
-
-
         linearLayout= view.findViewById(R.id.lyt_layout);
-
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int i) {

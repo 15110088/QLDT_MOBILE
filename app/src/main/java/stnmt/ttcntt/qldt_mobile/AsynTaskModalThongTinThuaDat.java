@@ -6,6 +6,7 @@ import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,12 +30,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import stnmt.ttcntt.qldt_mobile.Adapter.quyhoachAdapter;
+import stnmt.ttcntt.qldt_mobile.Interface.ItemClickListener;
 import stnmt.ttcntt.qldt_mobile.Retrofit.ApiService;
 import stnmt.ttcntt.qldt_mobile.Retrofit.RetrofitSupport;
 import stnmt.ttcntt.qldt_mobile.RetrofitDemo.ConvertMoneyService;
 import stnmt.ttcntt.qldt_mobile.RetrofitDemo.ResponseCurrency;
 
-public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayList<clsThuaDat>>{
+public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayList<clsThuaDat>> implements ItemClickListener {
     private static String url;
 
     private static final String TAG_IDTHUA ="ID";
@@ -56,6 +58,7 @@ public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayL
     String _dienTich="";
     String _loaiDat="";
     String paraEncode="";
+    ArrayList<clsThuaDat> thuaDatArrayList;
     public AsynTaskModalThongTinThuaDat(View att,String soTo,String soThua,String dientich,String loaiDat,String paraEncode)
     {
         this.activityCha = att;
@@ -64,8 +67,8 @@ public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayL
         this._dienTich=dientich;
         this._loaiDat=loaiDat;
         this.paraEncode=paraEncode;
-
     }
+
 
     @Override
     protected void onProgressUpdate(Void... values) {
@@ -180,14 +183,12 @@ public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayL
             //lblLoaiDat=(TextView) activityCha.findViewById(R.id.txtLoaiDat);
             txtSoVungQuyHoach=(TextView) activityCha.findViewById(R.id.txtSoVungQuyHoach);
             //lblQH=(TextView) activityCha.findViewById(R.id.txtQuyHoach);
-
+            thuaDatArrayList=thuaDat;
             rv=(RecyclerView)activityCha.findViewById(R.id.rvQuyHoach);
             LinearLayoutManager linearLayoutManager=new LinearLayoutManager(activityCha.getContext(),LinearLayoutManager.VERTICAL,false);
             rv.setLayoutManager(linearLayoutManager);
             rv.hasFixedSize();
-            quyhoachAdapter qh=new quyhoachAdapter(activityCha.getContext(),thuaDat);
-
-
+            quyhoachAdapter qh=new quyhoachAdapter(activityCha.getContext(),thuaDat,this);
             rv.setAdapter(qh);
 
 
@@ -203,5 +204,11 @@ public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayL
         {
             Log.e("onPostExecute "+getClass(),ex.getMessage());
         }
+    }
+
+    @Override
+    public void onClick(View view, int position, boolean isLongClick) {
+        Toast.makeText(activityCha.getContext(), "Item Click: "+thuaDatArrayList.get(position), Toast.LENGTH_SHORT).show();
+
     }
 }
