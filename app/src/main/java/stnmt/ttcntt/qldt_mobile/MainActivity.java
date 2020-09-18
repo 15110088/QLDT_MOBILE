@@ -7,8 +7,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+import android.animation.ArgbEvaluator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -79,6 +82,7 @@ import com.esri.arcgisruntime.symbology.Symbol;
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONObject;
@@ -89,6 +93,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -106,6 +111,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import stnmt.ttcntt.qldt_mobile.Adapter.tabAdapter;
+import stnmt.ttcntt.qldt_mobile.Model.Model;
 import stnmt.ttcntt.qldt_mobile.RetrofitDemo.ConvertMoneyService;
 import stnmt.ttcntt.qldt_mobile.RetrofitDemo.ResponseCurrency;
 import stnmt.ttcntt.qldt_mobile.Util.BottomSheetCustom;
@@ -127,10 +134,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     ActionBar actionBar;
+    LinearLayout linearLayoutBottomSheet;
     public     BottomSheetCustom bottomSheet;
     TextView textView;
     ImageButton btntest,btnLayerQH;
     private MenuItem mSearchAction;
+    FloatingActionButton fab,fab_location;
     private boolean isSearchOpened = false;
     private AutoCompleteTextView edtSeach;
     private String _maHuyen = "";
@@ -146,6 +155,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Boolean isBusy = false;
     boolean _enableGPS = false;
     boolean _isLayerQH = false;
+    boolean _isExpaned = false;
+    boolean _isLoadThuaDat = false;
+    int LevelBottomSheet=2;
+
     RouteTask routeTask;
     List<String> lstSoNha=null;
     List<String> lstKQSoNha=null;
@@ -153,7 +166,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private BottomSheetBehavior bottomSheetBehavior;
     private ToggleButton tbUpDown;
-    private LinearLayout linearLayoutBSheet;
+
+    ViewPager viewPager;
+    tabAdapter adapter;
+    List<Model> models;
+    Integer[] colors = null;
+    ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         layDuLieu();
         setupMap();
         ShowCallOut();
+        InitControll();
 
         UserCredential user = new UserCredential("dothibienhoa", "dothibienhoa2020");
 
@@ -289,11 +309,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        ImageButton imgButtonGPS = (ImageButton) findViewById(R.id.imgGPS);
-        imgButtonGPS.setOnClickListener(new View.OnClickListener() {
+        fab_location  = (FloatingActionButton) findViewById(R.id.fab_sheetlocation);
+        fab_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ZoomToGPS();
+
+                if(ActivityCompat.checkSelfPermission(MainActivity.this
+                        ,Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_DENIED) {
+                    ZoomToGPS();
+                }
+                else {
+                    ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},44);
+                    Toast.makeText(getApplicationContext(), "Chưa bật định vị", Toast.LENGTH_SHORT).show();
+
+                }
             }
         });
 
@@ -306,24 +335,110 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Call<ResponseCurrency> repos = service.convertVNDtoUSD("843d4d34ae72b3882e3db642c51e28e6","VND", "USD", 1);
 
-        repos.enqueue(new Callback<ResponseCurrency>() {
+//        repos.enqueue(new Callback<ResponseCurrency>() {
+//            @Override
+//            public void onResponse(Call<ResponseCurrency> call, Response<ResponseCurrency> response) {
+//                ResponseCurrency res = response.body();
+//                //Tỉ giá mình lấy được
+//               Double exchangeRate = res.getQuotes().getUSDVND();
+//                Log.d("Ty giá USD", exchangeRate.toString());
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseCurrency> call, Throwable t) {
+//                Log.d("Error", t.getMessage().toString());
+//            }
+//        });
+
+        //View page
+        models = new ArrayList<>();
+        models.add(new Model(R.drawable.maphouse, "Brochure", "Brochure is an informative paper document (often also used for advertising) that can be folded into a template"));
+        models.add(new Model(R.drawable.search, "Sticker", "Sticker is a type of label: a piece of printed paper, plastic, vinyl, or other material with pressure sensitive adhesive on one side"));
+        models.add(new Model(R.drawable.arrow, "Poster", "Poster is any piece of printed paper designed to be attached to a wall or vertical surface."));
+        models.add(new Model(R.drawable.biendong, "Namecard", "Business cards are cards bearing business information about a company or individual."));
+
+        adapter = new tabAdapter(models, this);
+
+        viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(adapter);
+        viewPager.setPadding(130, 0, 130, 0);
+
+        Integer[] colors_temp = {
+                getResources().getColor(R.color.md_black_1000),
+                getResources().getColor(R.color.md_blue_grey_50),
+                getResources().getColor(R.color.md_red_100),
+                getResources().getColor(R.color.md_brown_50)
+        };
+
+        colors = colors_temp;
+
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onResponse(Call<ResponseCurrency> call, Response<ResponseCurrency> response) {
-                ResponseCurrency res = response.body();
-                //Tỉ giá mình lấy được
-               Double exchangeRate = res.getQuotes().getUSDVND();
-                Log.d("Ty giá USD", exchangeRate.toString());
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                if (position < (adapter.getCount() -1) && position < (colors.length - 1)) {
+                    viewPager.setBackgroundColor(
+
+                            (Integer) argbEvaluator.evaluate(
+                                    positionOffset,
+                                    colors[position],
+                                    colors[position + 1]
+                            )
+                    );
+                }
+
+                else {
+                    viewPager.setBackgroundColor(colors[colors.length - 1]);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
 
             }
 
             @Override
-            public void onFailure(Call<ResponseCurrency> call, Throwable t) {
-                Log.d("Error", t.getMessage().toString());
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
 
 
     }
+
+    private void InitControll() {
+        fab = findViewById(R.id.fab_sheet);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(_isLoadThuaDat)
+                {
+                    if(_isExpaned)
+                    {
+                       // ShowView(linearLayoutBottomSheet,270);
+                        v.setRotation(0);
+                        _isExpaned=false;
+                        LevelBottomSheet=1;
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    }
+                    else {
+                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            v.setRotation(45);
+                            LevelBottomSheet=2;
+                            _isExpaned=true;
+                    }
+                }
+                else {
+                    Toast.makeText(MainActivity.this,"Chưa chọn thửa đất",Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+
+    }
+
     private void setupMap() {
         ArcGISRuntimeEnvironment.setLicense("runtimelite,1000,rud6806025350,none,1JPJD4SZ8Y4DRJE15232");
         mMapView = findViewById(R.id.mapView);
@@ -512,10 +627,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                                bottomSheet = new BottomSheetCustom(_maXa,soTo,soThua,dienTich,loaiDat);
 //                                bottomSheet.show(getSupportFragmentManager(),bottomSheet.getTag());
                                // final View view =View.inflate(getApplicationContext(), R.layout.bottom_sheet,null);
-                                LinearLayout linearLayout= findViewById(R.id.lyt_layout);
-                                bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
+                                linearLayoutBottomSheet= findViewById(R.id.lyt_layout);
+                                bottomSheetBehavior = BottomSheetBehavior.from(linearLayoutBottomSheet);
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                                bottomSheetBehavior.setPeekHeight(1300);
+                                bottomSheetBehavior.setPeekHeight(BottomSheetBehavior.PEEK_HEIGHT_AUTO);
                                 String data = JsonConvert.ConvertQueryThua(_maXa, Integer.parseInt(soTo), soThua);
                                 String key = "SoNhaajlkuoin1285sdfjk9LongThanh";
                                 String iv="IVsdfsdfgdf487LT";
@@ -527,7 +642,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                     String urlServiceThongTin="http://stnmt.dongnai.gov.vn:8080/Dothibienhoa/ServicesViTri.svc/";
                                     url = urlServiceThongTin+ "LayThongTinQuyHoach?thamSo="+paraEncode;
                                     clsUrl clsTT = new clsUrl(url,true,dienTich,loaiDat);
-                                    AsynTaskModalThongTinThuaDat asynLayTT = new AsynTaskModalThongTinThuaDat(linearLayout,soTo,soThua,dienTich,loaiDat,paraEncode);
+                                    AsynTaskModalThongTinThuaDat asynLayTT = new AsynTaskModalThongTinThuaDat(linearLayoutBottomSheet,soTo,soThua,dienTich,loaiDat,paraEncode);
                                     asynLayTT.execute(clsTT);
                                 }
                                 catch (Exception e)
@@ -542,17 +657,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                         switch(i)
                                         {
                                             case BottomSheetBehavior.STATE_EXPANDED:
-                                                ShowView(linearLayout,1300);
+                                               // ShowView(linearLayout,1300);
                                                 Toast.makeText(getApplicationContext(), "EXPANED", Toast.LENGTH_SHORT).show();
                                                 break;
                                             case BottomSheetBehavior.STATE_COLLAPSED:
-                                                ShowView(linearLayout,350);
+                                               // ShowView(linearLayout,350);
                                                 Toast.makeText(getApplicationContext(), "Colapse", Toast.LENGTH_SHORT).show();
+                                                fab.setRotation(45);
+                                                _isExpaned=true;
                                                 break;
+                                            case BottomSheetBehavior.STATE_HIDDEN:
+                                                _isExpaned=false;
+
+                                                fab.setRotation(0);break;
                                         }
-
-
-
                                     }
 
                                     @Override
@@ -587,7 +705,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 }
                             });
                             Log.i(getResources().getString(R.string.app_name), "Content: " +calloutView+ "\n");
-
+                            _isLoadThuaDat=true;
                             mCallout = mMapView.getCallout();
                             mCallout.setLocation(mapPoint);
                             mCallout.setContent(calloutView);
@@ -1163,11 +1281,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void ZoomToGPS() {
         try {
-            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-                return;
-            }
+
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 if (!_enableGPS) {
                     _enableGPS = true;

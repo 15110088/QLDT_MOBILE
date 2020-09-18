@@ -19,9 +19,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ThuaDatChiTiet"></activity>
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".activity_detail"></activity>
+        <activity android:name=".ThuaDatChiTiet" />
         <activity android:name=".ChonXaActivity" />
         <activity android:name=".ChonHuyen" />
         <activity android:name=".DanhSachChuThuaActivity" />

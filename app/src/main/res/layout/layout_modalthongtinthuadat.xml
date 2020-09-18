@@ -8,21 +8,16 @@
         android:layout_width="match_parent"
         android:background="@color/colorScreen"
         android:orientation="vertical"
-        android:layout_height="match_parent">
-
+        android:layout_height="fill_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-
+            android:layout_height="20mm"
             android:background="@color/colorPrimary">
-
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:src="@drawable/maphouse"></ImageView>
-
-
             <LinearLayout
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
