@@ -8,15 +8,15 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-            <include layout="@layout/layout_modalthongtinthuadat"></include>
+<!--            <include layout="@layout/layout_modalthongtinthuadat"></include>-->
     <androidx.viewpager.widget.ViewPager
         android:foregroundGravity="center"
         android:id="@+id/viewPager"
         android:layout_centerInParent="true"
         android:overScrollMode="never"
         android:clipToPadding="false"
-        android:layout_width="0dp"
-        android:layout_height="0dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     </androidx.viewpager.widget.ViewPager>
 
 

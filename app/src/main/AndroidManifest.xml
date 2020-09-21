@@ -21,12 +21,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity_detail"></activity>
+        <activity android:name=".activity_detail"
+            ></activity>
         <activity android:name=".ThuaDatChiTiet" />
         <activity android:name=".ChonXaActivity" />
         <activity android:name=".ChonHuyen" />
         <activity android:name=".DanhSachChuThuaActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

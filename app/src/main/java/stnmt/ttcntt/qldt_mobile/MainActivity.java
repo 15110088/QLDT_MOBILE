@@ -48,6 +48,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.ToxicBakery.viewpager.transforms.AccordionTransformer;
+import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
+import com.ToxicBakery.viewpager.transforms.FlipHorizontalTransformer;
+import com.ToxicBakery.viewpager.transforms.ForegroundToBackgroundTransformer;
+import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
+import com.ToxicBakery.viewpager.transforms.ScaleInOutTransformer;
+import com.ToxicBakery.viewpager.transforms.StackTransformer;
+import com.ToxicBakery.viewpager.transforms.TabletTransformer;
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
@@ -106,12 +114,18 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import stnmt.ttcntt.qldt_mobile.Adapter.customAdapterViewPage;
 import stnmt.ttcntt.qldt_mobile.Adapter.tabAdapter;
+import stnmt.ttcntt.qldt_mobile.Fragment.chuthichbando;
+import stnmt.ttcntt.qldt_mobile.Fragment.loaibando;
+import stnmt.ttcntt.qldt_mobile.Fragment.thongtinthuadat;
 import stnmt.ttcntt.qldt_mobile.Model.Model;
 import stnmt.ttcntt.qldt_mobile.RetrofitDemo.ConvertMoneyService;
 import stnmt.ttcntt.qldt_mobile.RetrofitDemo.ResponseCurrency;
@@ -123,23 +137,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Callout mCallout;
     private ServiceFeatureTable mServiceFeatureTable;
     private FeatureLayer mFeatureLayer;
-
     private ServiceFeatureTable mServiceFeatureTableMauQH;
     private FeatureLayer mFeatureLayerMauQH;
 
 
-    ArcGISMapImageSublayer SubRanhThua;
-    ArcGISMapImageLayer tiledLayerQLDTRanhThua;
     LocationDisplay lDisplayManager;
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     ActionBar actionBar;
+
+    @BindView(R.id.lyt_layout)
     LinearLayout linearLayoutBottomSheet;
-    public     BottomSheetCustom bottomSheet;
+
+    public BottomSheetCustom bottomSheet;
     TextView textView;
     ImageButton btntest,btnLayerQH;
     private MenuItem mSearchAction;
     FloatingActionButton fab,fab_location;
+    @BindView(R.id.fab_sheetMap)
+    FloatingActionButton  fab_map;
     private boolean isSearchOpened = false;
     private AutoCompleteTextView edtSeach;
     private String _maHuyen = "";
@@ -165,11 +181,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private String urlServiceThongTin="http://stnmt.dongnai.gov.vn:8080/Dothibienhoa/ServicesViTri.svc/";
 
     private BottomSheetBehavior bottomSheetBehavior;
+
+
     private ToggleButton tbUpDown;
 
+    @BindView(R.id.viewPager)
     ViewPager viewPager;
+
+    //Apdater
+    customAdapterViewPage adapterViewPage;
     tabAdapter adapter;
     List<Model> models;
+
+
     Integer[] colors = null;
     ArgbEvaluator argbEvaluator = new ArgbEvaluator();
 
@@ -178,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ButterKnife.bind(this);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -321,7 +345,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 else {
                     ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},44);
                     Toast.makeText(getApplicationContext(), "Chưa bật định vị", Toast.LENGTH_SHORT).show();
-
                 }
             }
         });
@@ -352,57 +375,56 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        });
 
         //View page
-        models = new ArrayList<>();
-        models.add(new Model(R.drawable.maphouse, "Brochure", "Brochure is an informative paper document (often also used for advertising) that can be folded into a template"));
-        models.add(new Model(R.drawable.search, "Sticker", "Sticker is a type of label: a piece of printed paper, plastic, vinyl, or other material with pressure sensitive adhesive on one side"));
-        models.add(new Model(R.drawable.arrow, "Poster", "Poster is any piece of printed paper designed to be attached to a wall or vertical surface."));
-        models.add(new Model(R.drawable.biendong, "Namecard", "Business cards are cards bearing business information about a company or individual."));
-
-        adapter = new tabAdapter(models, this);
-
-        viewPager = findViewById(R.id.viewPager);
-        viewPager.setAdapter(adapter);
-        viewPager.setPadding(130, 0, 130, 0);
-
-        Integer[] colors_temp = {
-                getResources().getColor(R.color.md_black_1000),
-                getResources().getColor(R.color.md_blue_grey_50),
-                getResources().getColor(R.color.md_red_100),
-                getResources().getColor(R.color.md_brown_50)
-        };
-
-        colors = colors_temp;
-
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                if (position < (adapter.getCount() -1) && position < (colors.length - 1)) {
-                    viewPager.setBackgroundColor(
-
-                            (Integer) argbEvaluator.evaluate(
-                                    positionOffset,
-                                    colors[position],
-                                    colors[position + 1]
-                            )
-                    );
-                }
-
-                else {
-                    viewPager.setBackgroundColor(colors[colors.length - 1]);
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+//        models = new ArrayList<>();
+//        models.add(new Model(R.drawable.maphouse, "Brochure", "Brochure is an informative paper document (often also used for advertising) that can be folded into a template"));
+//        models.add(new Model(R.drawable.search, "Sticker", "Sticker is a type of label: a piece of printed paper, plastic, vinyl, or other material with pressure sensitive adhesive on one side"));
+//        models.add(new Model(R.drawable.arrow, "Poster", "Poster is any piece of printed paper designed to be attached to a wall or vertical surface."));
+//        models.add(new Model(R.drawable.biendong, "Namecard", "Business cards are cards bearing business information about a company or individual."));
+//
+//        adapter = new tabAdapter(models, this);
+//
+//        viewPager.setAdapter(adapter);
+//        viewPager.setPadding(130, 0, 130, 0);
+//
+//        Integer[] colors_temp = {
+//                getResources().getColor(R.color.md_black_1000),
+//                getResources().getColor(R.color.md_blue_grey_50),
+//                getResources().getColor(R.color.md_red_100),
+//                getResources().getColor(R.color.md_brown_50)
+//        };
+//
+//        colors = colors_temp;
+//
+//        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//                if (position < (adapter.getCount() -1) && position < (colors.length - 1)) {
+//                    viewPager.setBackgroundColor(
+//
+//                            (Integer) argbEvaluator.evaluate(
+//                                    positionOffset,
+//                                    colors[position],
+//                                    colors[position + 1]
+//                            )
+//                    );
+//                }
+//
+//                else {
+//                    viewPager.setBackgroundColor(colors[colors.length - 1]);
+//                }
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
 
 
     }
@@ -430,13 +452,36 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                 }
                 else {
-                    Toast.makeText(MainActivity.this,"Chưa chọn thửa đất",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"Vui lòng chọn thửa đất",Toast.LENGTH_SHORT).show();
                 }
 
 
             }
         });
 
+
+        fab_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetBehavior = BottomSheetBehavior.from(linearLayoutBottomSheet);
+                bottomSheetBehavior.setPeekHeight(BottomSheetBehavior.PEEK_HEIGHT_AUTO);
+                Toast.makeText(MainActivity.this,"Chọn bản đồ",Toast.LENGTH_SHORT).show();
+                adapterViewPage= new customAdapterViewPage(getSupportFragmentManager());
+                adapterViewPage.removeAllFragment();
+                loaibando frmLoaiBanDo= new loaibando();
+                chuthichbando frmChuThich = new chuthichbando();
+                adapterViewPage.addFragment(frmLoaiBanDo,"ok");
+                adapterViewPage.addFragment(frmChuThich,"ok");
+                viewPager.setAdapter(adapterViewPage);
+                if(_isExpaned)
+                {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+                else{
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+            }
+        });
     }
 
     private void setupMap() {
@@ -622,12 +667,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                            bottomSheet.setContentView(view);
                             if(!_isLayerQH)
                             {
-//                                LinearLayout linearLayout = findViewById(R.id.lyt_layout);
-//                                bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
+//                                bottomSheetBehavior = BottomSheetBehavior.from(linearLayoutBottomSheet);
 //                                bottomSheet = new BottomSheetCustom(_maXa,soTo,soThua,dienTich,loaiDat);
 //                                bottomSheet.show(getSupportFragmentManager(),bottomSheet.getTag());
-                               // final View view =View.inflate(getApplicationContext(), R.layout.bottom_sheet,null);
-                                linearLayoutBottomSheet= findViewById(R.id.lyt_layout);
+//                                final View view =View.inflate(getApplicationContext(), R.layout.bottom_sheet,null);
+
                                 bottomSheetBehavior = BottomSheetBehavior.from(linearLayoutBottomSheet);
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                                 bottomSheetBehavior.setPeekHeight(BottomSheetBehavior.PEEK_HEIGHT_AUTO);
@@ -679,7 +723,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                     }
                                 });
 
+                                adapterViewPage= new customAdapterViewPage(getSupportFragmentManager());
+                                adapterViewPage.removeAllFragment();
+                                thongtinthuadat frmThuaDat = new thongtinthuadat();
+                                thongtinthuadat frmThuaDat2 = new thongtinthuadat();
 
+                                adapterViewPage.addFragment(frmThuaDat,"ok");
+                                adapterViewPage.addFragment(frmThuaDat2,"ok");
+
+                                viewPager.setAdapter(adapterViewPage);
+                                viewPager.setPageTransformer(true,new StackTransformer());
 
                             }
                             // show callout
