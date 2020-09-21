@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import stnmt.ttcntt.qldt_mobile.R;
 
 /**
@@ -65,6 +67,8 @@ public class chuthichbando extends Fragment {
 
         View  view = inflater.inflate(R.layout.fragment_chuthichbando, container, false);
         ImageView imgMau= view.findViewById(R.id.ImgMauChuThich);
+        Picasso.get().load("https://nhamthanbds.com/wp-content/uploads/2020/07/ky-hieu-quy-hoach-su-dung-dat.png")
+                .into(imgMau);
 
         return view;
     }

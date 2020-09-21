@@ -473,6 +473,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 adapterViewPage.addFragment(frmLoaiBanDo,"ok");
                 adapterViewPage.addFragment(frmChuThich,"ok");
                 viewPager.setAdapter(adapterViewPage);
+                viewPager.setPageTransformer(true,new StackTransformer());
+
                 if(_isExpaned)
                 {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);

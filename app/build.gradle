@@ -43,6 +43,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
     implementation 'com.github.Hitomis:CircleMenu:v1.1.0'
     implementation 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:2.0.24'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
 
 
