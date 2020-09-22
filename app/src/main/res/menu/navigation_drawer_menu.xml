@@ -23,7 +23,7 @@
     <item android:title="Thông tin">
         <menu>
             <item
-                android:id="@+id/item_navigation_drawer_help_and_feedback"
+                android:id="@+id/item_dangnhap"
                 android:icon="@drawable/ic_person_pin_black_24dp"
                 android:title="@string/dangnhap" />
            <item

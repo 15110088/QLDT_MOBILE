@@ -2,22 +2,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/lyt_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 <!--            <include layout="@layout/layout_modalthongtinthuadat"></include>-->
-    <androidx.viewpager.widget.ViewPager
-        android:foregroundGravity="center"
-        android:id="@+id/viewPager"
-        android:layout_centerInParent="true"
-        android:overScrollMode="never"
-        android:clipToPadding="false"
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </androidx.viewpager.widget.ViewPager>
+        android:layout_height="match_parent">
+        <androidx.viewpager.widget.ViewPager
+            android:foregroundGravity="center"
+            android:id="@+id/viewPager"
+            android:layout_centerInParent="true"
+            android:overScrollMode="never"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </androidx.viewpager.widget.ViewPager>
+
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+            android:id="@+id/dots_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            app:dotsColor="@color/md_white_1000"
+            app:dotsCornerRadius="8dp"
+            app:dotsSize="10dp"
+            app:dotsSpacing="4dp"
+            app:dotsWidthFactor="2.5"
+            app:progressMode="true"
+            app:layout_anchor="@id/viewPager"
+            app:layout_anchorGravity="center|bottom"
+            android:layout_margin="20dp"
+            app:selectedDotColor="@color/colorPrimary"
+
+            />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
 
 
 </LinearLayout>

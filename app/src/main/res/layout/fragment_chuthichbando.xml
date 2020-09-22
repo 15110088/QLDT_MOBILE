@@ -13,7 +13,7 @@
         >
         <LinearLayout
             android:layout_width="match_parent"
-            android:background="@color/colorScreen"
+            android:background="@color/white"
             android:orientation="vertical"
             android:layout_height="fill_parent">
             <LinearLayout
@@ -40,12 +40,10 @@
            <ImageView
                android:layout_width="match_parent"
                android:id="@+id/ImgMauChuThich"
-               android:layout_height="match_parent">
-
+               android:backgroundTint="@color/white"
+               android:layout_height="wrap_content">
            </ImageView>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"></LinearLayout>
+
 
 
 

@@ -43,6 +43,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,8 @@ import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.Feature;
+import com.esri.arcgisruntime.data.FeatureCollection;
+import com.esri.arcgisruntime.data.FeatureCollectionTable;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
@@ -88,10 +91,18 @@ import com.esri.arcgisruntime.security.UserCredential;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.Symbol;
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.CubeGrid;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
+import com.github.ybq.android.spinkit.style.FoldingCube;
+import com.github.ybq.android.spinkit.style.ThreeBounce;
+import com.github.ybq.android.spinkit.style.WanderingCubes;
+import com.github.ybq.android.spinkit.style.Wave;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import org.json.JSONObject;
 
@@ -126,13 +137,14 @@ import stnmt.ttcntt.qldt_mobile.Adapter.tabAdapter;
 import stnmt.ttcntt.qldt_mobile.Fragment.chuthichbando;
 import stnmt.ttcntt.qldt_mobile.Fragment.loaibando;
 import stnmt.ttcntt.qldt_mobile.Fragment.thongtinthuadat;
+import stnmt.ttcntt.qldt_mobile.Interface.IEventImageButton;
 import stnmt.ttcntt.qldt_mobile.Model.Model;
 import stnmt.ttcntt.qldt_mobile.RetrofitDemo.ConvertMoneyService;
 import stnmt.ttcntt.qldt_mobile.RetrofitDemo.ResponseCurrency;
 import stnmt.ttcntt.qldt_mobile.Util.BottomSheetCustom;
 
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, IEventImageButton {
     private MapView mMapView;
     private Callout mCallout;
     private ServiceFeatureTable mServiceFeatureTable;
@@ -173,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     boolean _isLayerQH = false;
     boolean _isExpaned = false;
     boolean _isLoadThuaDat = false;
+    boolean _isLoadingMap =false;
     int LevelBottomSheet=2;
 
     RouteTask routeTask;
@@ -181,13 +194,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private String urlServiceThongTin="http://stnmt.dongnai.gov.vn:8080/Dothibienhoa/ServicesViTri.svc/";
 
     private BottomSheetBehavior bottomSheetBehavior;
-
+    Basemap.Type basemapType;
 
     private ToggleButton tbUpDown;
 
     @BindView(R.id.viewPager)
     ViewPager viewPager;
 
+    @BindView(R.id.spin_kit)
+    ProgressBar progressBar;
     //Apdater
     customAdapterViewPage adapterViewPage;
     tabAdapter adapter;
@@ -257,10 +272,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         mServiceFeatureTableMauQH=new ServiceFeatureTable("https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/DOTHIBIENHOA/PhanKhu_26377/MapServer/0");
         mServiceFeatureTableMauQH.setCredential(user);
+        mServiceFeatureTableMauQH.loadAsync();
+
         mFeatureLayerMauQH=new FeatureLayer(mServiceFeatureTableMauQH);
+        mFeatureLayerMauQH.loadAsync();
         mFeatureLayerMauQH.addDoneLoadingListener(()->{
             if (mFeatureLayerMauQH.getLoadStatus() == LoadStatus.LOADED) {
-                Toast.makeText(this, "Load Lop Ranh Thua QH ", Toast.LENGTH_LONG).show();
+
             }
             else {
                 String error = "Error loading mServiceFeatureTable layer: " + mFeatureLayer.getLoadError().getMessage();
@@ -273,22 +291,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mServiceFeatureTable=new ServiceFeatureTable(url1);
         mServiceFeatureTable.setCredential(user);
         mServiceFeatureTable.loadAsync();
-        mServiceFeatureTable.addDoneLoadingListener(()->{
-            if (mFeatureLayer.getLoadStatus() == LoadStatus.LOADED) {
-                Toast.makeText(this, "Load Lop Ranh Thua Service ", Toast.LENGTH_LONG).show();
-            }
-            else {
-                String error = "Error loading mServiceFeatureTable layer: " + mFeatureLayer.getLoadError().getMessage();
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-                Log.e("OK", error);
-            }
-        });
+
         mFeatureLayer=new FeatureLayer(mServiceFeatureTable);
         mFeatureLayer.loadAsync();
         mFeatureLayer.addDoneLoadingListener(()->{
             if (mFeatureLayer.getLoadStatus() == LoadStatus.LOADED) {
-                Toast.makeText(this, "Load Lop Ranh Thua ", Toast.LENGTH_LONG).show();
-            }
+                _isLoadingMap=true;
+                progressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(this, "Tải Bản Đồ Thành Công", Toast.LENGTH_LONG).show();            }
             else {
                 String error = "Error loading mFeatureLayer layer: " + mFeatureLayer.getLoadError().getMessage();
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show();
@@ -297,7 +307,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         ArcGISMap map = mMapView.getMap();
-        map.getBasemap().getBaseLayers().add(mFeatureLayerMauQH);
+      //  map.getBasemap().getBaseLayers().add(mFeatureLayerMauQH);
+        map.getOperationalLayers().add(mFeatureLayerMauQH);
+
         map.getOperationalLayers().add(mFeatureLayer);
 
         ZoomToXa(mMapView,_maXa);
@@ -454,12 +466,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 else {
                     Toast.makeText(MainActivity.this,"Vui lòng chọn thửa đất",Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         });
-
-
         fab_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -468,29 +476,50 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Toast.makeText(MainActivity.this,"Chọn bản đồ",Toast.LENGTH_SHORT).show();
                 adapterViewPage= new customAdapterViewPage(getSupportFragmentManager());
                 adapterViewPage.removeAllFragment();
-                loaibando frmLoaiBanDo= new loaibando();
+                loaibando frmLoaiBanDo= new loaibando((view, position) -> {
+                    switch (position)
+                    {
+                        case 1:
+                            Toast.makeText(getApplication(), "Bản Đồ Vệ Tinh",Toast.LENGTH_SHORT).show();
+                            basemapType = Basemap.Type.IMAGERY;
+                            mMapView.getMap().setBasemap(Basemap.createImageryWithLabelsVector());                            break;
+                        case 2:
+                            Toast.makeText(getApplication(), "Bản Đồ Đường",Toast.LENGTH_SHORT).show();
+                            basemapType = Basemap.Type.OPEN_STREET_MAP;
+                            mMapView.getMap().setBasemap(Basemap.createOpenStreetMap());
+                            break;
+                    }
+                });
                 chuthichbando frmChuThich = new chuthichbando();
                 adapterViewPage.addFragment(frmLoaiBanDo,"ok");
                 adapterViewPage.addFragment(frmChuThich,"ok");
                 viewPager.setAdapter(adapterViewPage);
                 viewPager.setPageTransformer(true,new StackTransformer());
-
+                DotsIndicator dotsIndicator = (DotsIndicator) findViewById(R.id.dots_indicator);
+                dotsIndicator.setViewPager(viewPager);
                 if(_isExpaned)
                 {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    fab.setRotation(0);
+                    _isExpaned=false;
                 }
                 else{
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    fab.setRotation(45);
+                    _isExpaned=true;
                 }
             }
         });
+        Sprite doubleBounce = new Wave();
+        progressBar.setIndeterminateDrawable(doubleBounce);
+
     }
 
     private void setupMap() {
         ArcGISRuntimeEnvironment.setLicense("runtimelite,1000,rud6806025350,none,1JPJD4SZ8Y4DRJE15232");
         mMapView = findViewById(R.id.mapView);
         if (mMapView != null) {
-            Basemap.Type basemapType = Basemap.Type.OPEN_STREET_MAP;
+            basemapType = Basemap.Type.OPEN_STREET_MAP;
             double latitude =  10.890587;
             double longitude = 106.922532;
             int levelOfDetail = 11;
@@ -541,13 +570,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 //startActivity(intenCapHuyen);
                                 startActivityForResult(intenBieuDo, 4);
                                 return true;*/
-                            case R.id.item_navigation_drawer_help_and_feedback:
+                            case R.id.item_dangnhap:
                                 menuItem.setChecked(true);
                                 // Toast.makeText(MainActivity.this, menuItem.getTitle().toString(), Toast.LENGTH_SHORT).show();
                                 drawerLayout.closeDrawer(GravityCompat.START);
-                                // Intent intentDangNhap = new Intent(MainActivity.this,LogginActivity.class);
-                              //  Intent intentDangNhap = new Intent(MainActivity.this,LogginActivity.class);
-                             //   startActivityForResult(intentDangNhap,2);
+                                 Intent intentDangNhap = new Intent(MainActivity.this,LoginActivity.class);
+                                  startActivityForResult(intentDangNhap,2);
                                 return true;
                             case R.id.item_dangXuat:
 //                                clsAccount mAccount = ((clsAccount) getApplicationContext());
@@ -669,73 +697,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                            bottomSheet.setContentView(view);
                             if(!_isLayerQH)
                             {
-//                                bottomSheetBehavior = BottomSheetBehavior.from(linearLayoutBottomSheet);
-//                                bottomSheet = new BottomSheetCustom(_maXa,soTo,soThua,dienTich,loaiDat);
-//                                bottomSheet.show(getSupportFragmentManager(),bottomSheet.getTag());
-//                                final View view =View.inflate(getApplicationContext(), R.layout.bottom_sheet,null);
-
-                                bottomSheetBehavior = BottomSheetBehavior.from(linearLayoutBottomSheet);
-                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                                bottomSheetBehavior.setPeekHeight(BottomSheetBehavior.PEEK_HEIGHT_AUTO);
-                                String data = JsonConvert.ConvertQueryThua(_maXa, Integer.parseInt(soTo), soThua);
-                                String key = "SoNhaajlkuoin1285sdfjk9LongThanh";
-                                String iv="IVsdfsdfgdf487LT";
-                                String url ="";
-                                try {
-                                    CryptLib cry = new CryptLib();
-                                    String enData = cry.encrypt(data, key, iv);
-                                    String paraEncode = Uri.encode(enData);
-                                    String urlServiceThongTin="http://stnmt.dongnai.gov.vn:8080/Dothibienhoa/ServicesViTri.svc/";
-                                    url = urlServiceThongTin+ "LayThongTinQuyHoach?thamSo="+paraEncode;
-                                    clsUrl clsTT = new clsUrl(url,true,dienTich,loaiDat);
-                                    AsynTaskModalThongTinThuaDat asynLayTT = new AsynTaskModalThongTinThuaDat(linearLayoutBottomSheet,soTo,soThua,dienTich,loaiDat,paraEncode);
-                                    asynLayTT.execute(clsTT);
-                                }
-                                catch (Exception e)
-                                {
-
-                                }
-
-                                bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                                    @Override
-                                    public void onStateChanged(@NonNull View view, int i) {
-
-                                        switch(i)
-                                        {
-                                            case BottomSheetBehavior.STATE_EXPANDED:
-                                               // ShowView(linearLayout,1300);
-                                                Toast.makeText(getApplicationContext(), "EXPANED", Toast.LENGTH_SHORT).show();
-                                                break;
-                                            case BottomSheetBehavior.STATE_COLLAPSED:
-                                               // ShowView(linearLayout,350);
-                                                Toast.makeText(getApplicationContext(), "Colapse", Toast.LENGTH_SHORT).show();
-                                                fab.setRotation(45);
-                                                _isExpaned=true;
-                                                break;
-                                            case BottomSheetBehavior.STATE_HIDDEN:
-                                                _isExpaned=false;
-
-                                                fab.setRotation(0);break;
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onSlide(@NonNull View view, float v) {
-
-                                    }
-                                });
-
-                                adapterViewPage= new customAdapterViewPage(getSupportFragmentManager());
-                                adapterViewPage.removeAllFragment();
-                                thongtinthuadat frmThuaDat = new thongtinthuadat();
-                                thongtinthuadat frmThuaDat2 = new thongtinthuadat();
-
-                                adapterViewPage.addFragment(frmThuaDat,"ok");
-                                adapterViewPage.addFragment(frmThuaDat2,"ok");
-
-                                viewPager.setAdapter(adapterViewPage);
-                                viewPager.setPageTransformer(true,new StackTransformer());
-
+                                handleViewPageThuaDat();
                             }
                             // show callout
                             noiDung.setText(strContent);
@@ -760,7 +722,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 }
                             });
                             Log.i(getResources().getString(R.string.app_name), "Content: " +calloutView+ "\n");
-                            _isLoadThuaDat=true;
                             mCallout = mMapView.getCallout();
                             mCallout.setLocation(mapPoint);
                             mCallout.setContent(calloutView);
@@ -777,25 +738,83 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
     }
 
-    private void HideView(View view) {
-        ViewGroup.LayoutParams params=view.getLayoutParams();
-        params.height=0;
-        view.setLayoutParams(params);
 
-    }
-    private void ShowView(View view,int size) {
-        ViewGroup.LayoutParams params=view.getLayoutParams();
-        params.height=size;
-        view.setLayoutParams(params);
+    //Load dataviewpage
 
+    private  void handleViewPageThuaDat(){
+        if(!_isLayerQH)
+        {
+//                                bottomSheetBehavior = BottomSheetBehavior.from(linearLayoutBottomSheet);
+//                                bottomSheet = new BottomSheetCustom(_maXa,soTo,soThua,dienTich,loaiDat);
+//                                bottomSheet.show(getSupportFragmentManager(),bottomSheet.getTag());
+//                                final View view =View.inflate(getApplicationContext(), R.layout.bottom_sheet,null);
+
+            bottomSheetBehavior = BottomSheetBehavior.from(linearLayoutBottomSheet);
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            bottomSheetBehavior.setPeekHeight(BottomSheetBehavior.PEEK_HEIGHT_AUTO);
+            String data = JsonConvert.ConvertQueryThua(_maXa, Integer.parseInt(soTo), soThua);
+            String key = "SoNhaajlkuoin1285sdfjk9LongThanh";
+            String iv="IVsdfsdfgdf487LT";
+            String url ="";
+            try {
+                CryptLib cry = new CryptLib();
+                String enData = cry.encrypt(data, key, iv);
+                String paraEncode = Uri.encode(enData);
+                String urlServiceThongTin="http://stnmt.dongnai.gov.vn:8080/Dothibienhoa/ServicesViTri.svc/";
+                url = urlServiceThongTin+ "LayThongTinQuyHoach?thamSo="+paraEncode;
+                clsUrl clsTT = new clsUrl(url,true,dienTich,loaiDat);
+                AsynTaskModalThongTinThuaDat asynLayTT = new AsynTaskModalThongTinThuaDat(linearLayoutBottomSheet,soTo,soThua,dienTich,loaiDat,paraEncode);
+                asynLayTT.execute(clsTT);
+                _isLoadThuaDat=true;
+
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                @Override
+                public void onStateChanged(@NonNull View view, int i) {
+
+                    switch(i)
+                    {
+                        case BottomSheetBehavior.STATE_EXPANDED:
+                            // ShowView(linearLayout,1300);
+                            break;
+                        case BottomSheetBehavior.STATE_COLLAPSED:
+                            // ShowView(linearLayout,350);
+                            fab.setRotation(45);
+                            _isExpaned=true;
+                            break;
+                        case BottomSheetBehavior.STATE_HIDDEN:
+                            _isExpaned=false;
+
+                            fab.setRotation(0);break;
+                    }
+                }
+
+
+                @Override
+                public void onSlide(@NonNull View view, float v) {
+
+                }
+            });
+
+            adapterViewPage= new customAdapterViewPage(getSupportFragmentManager());
+            adapterViewPage.removeAllFragment();
+            thongtinthuadat frmThuaDat = new thongtinthuadat();
+            thongtinthuadat frmThuaDat2 = new thongtinthuadat();
+
+            adapterViewPage.addFragment(frmThuaDat,"ok");
+            adapterViewPage.addFragment(frmThuaDat2,"ok");
+
+            viewPager.setAdapter(adapterViewPage);
+            viewPager.setPageTransformer(true,new StackTransformer());
+
+        }
     }
-    private int GetActionBarsize()
-    {
-        final TypedArray typedArray=getApplicationContext().getTheme().obtainStyledAttributes(new int[]{
-                R.attr.actionBarSize
-        });
-        return  (int) typedArray.getDimension(0,0);
-    }
+
     //Ham dong, mo edidtext search
     protected void handleMenuSearch(){
         ActionBar action = getSupportActionBar(); //get the actionbar
@@ -973,21 +992,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 QueryParameters queryParameters = new QueryParameters();
                 queryParameters.setWhereClause("SH_TO =" + soToTim + " and SH_THUA=" + soThuaTim + " ");
                 try {
+                    List<FeatureQueryResult> outFields = new ArrayList<>();
+
                     final ListenableFuture<FeatureQueryResult> future = mServiceFeatureTable.queryFeaturesAsync(queryParameters);
+
                     future.addDoneListener(new Runnable() {
                         @Override
                         public void run() {
                             try {
+
+                                //create a feature collection table from the query results
+                                FeatureCollectionTable featureCollectionTable = new FeatureCollectionTable(future.get());
+
+                                //create a feature collection from the above feature collection table
+                                FeatureCollection featureCollection = new FeatureCollection();
+                                featureCollection.getTables().add(featureCollectionTable);
+
                                 FeatureQueryResult result = future.get();
                                 Iterator<Feature> resultIterator = result.iterator();
+                                soThua=soThuaTim;
+                                soTo=soToTim;
                                 if (resultIterator.hasNext()) {
-                                    Feature feature = resultIterator.next();
-                                   // Toast.makeText(getApplicationContext(), feature.getAttributes().get("LOAIDAT").toString(), Toast.LENGTH_LONG).show();
-
-
-                                    Envelope envelope = feature.getGeometry().getExtent();
+                                    Feature feature1 = resultIterator.next();
+                                    Envelope envelope = feature1.getGeometry().getExtent();
                                     mMapView.setViewpointGeometryAsync(envelope, 10);
-                                    mFeatureLayer.selectFeature(feature);
+                                    mFeatureLayer.selectFeature(feature1);
+                                    //handleViewPageThuaDat();
                                 } else {
                                 }
                             } catch (Exception e) {
@@ -1311,10 +1341,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         Iterator<Feature> resultIterator = result.iterator();
                         if (resultIterator.hasNext()) {
                             Feature feature = resultIterator.next();
-                           // Toast.makeText(getApplicationContext(),feature.getAttributes().get("LOAIDAT").toString(), Toast.LENGTH_LONG).show();
                             Envelope en = feature.getGeometry().getExtent();
                             mMapView.setViewpointGeometryAsync(en, 10);
-
+                            // Toast.makeText(getApplicationContext(),feature.getAttributes().get("LOAIDAT").toString(), Toast.LENGTH_LONG).show();
 
                         } else {
                         }
@@ -1397,5 +1426,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             mMapView.dispose();
         }
         super.onDestroy();
+    }
+
+
+
+    @Override
+    public void OnClick(View view, int position) {
+        switch (position)
+        {
+            case 1:
+                Toast.makeText(getApplication(), "Bản Đồ Vệ Tinh",Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                Toast.makeText(getApplication(), "Bản Đồ Đường",Toast.LENGTH_SHORT).show();
+                break;
+        }
+
     }
 }
