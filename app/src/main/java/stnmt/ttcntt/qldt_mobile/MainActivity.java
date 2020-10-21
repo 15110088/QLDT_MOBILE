@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
@@ -154,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     LocationDisplay lDisplayManager;
+    LocationDisplay mLocationDisplay;
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     ActionBar actionBar;
@@ -210,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     Integer[] colors = null;
-    ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+   // ArgbEvaluator argbEvaluator = new ArgbEvaluator();
 
 
     @Override
@@ -218,8 +220,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//        StrictMode.setThreadPolicy(policy);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         inflater = getLayoutInflater();
         setSupportActionBar(toolbar);
@@ -257,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                DangNhap(user,pass);*/
 //        } catch (Exception ex) {
 //        }
-        if (_maHuyen == null || _maHuyen.isEmpty()) CheckLastDaTa();
+        if (_maHuyen == null || _maHuyen.length()<1) CheckLastDaTa();
         actionBar.setTitle(_tieuDe);
         actionBar.setCustomView(R.layout.search_bar);
         edtSeach = (AutoCompleteTextView) actionBar.getCustomView().findViewById(R.id.edtSearch); //the text editor
@@ -267,12 +269,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setupMap();
         ShowCallOut();
         InitControll();
-
+        setupLocationDisplay();
         UserCredential user = new UserCredential("dothibienhoa", "dothibienhoa2020");
-
-        mServiceFeatureTableMauQH=new ServiceFeatureTable("https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/DOTHIBIENHOA/PhanKhu_26377/MapServer/0");
+        //UserCredential user = new UserCredential("bienhoa", "Stnmt75731");
+        mServiceFeatureTableMauQH=new ServiceFeatureTable("http://datdai.stnmt.dongnai.gov.vn/arcgis/rest/services/DOTHIBIENHOA/PhanKhu_26377/MapServer/0");
         mServiceFeatureTableMauQH.setCredential(user);
         mServiceFeatureTableMauQH.loadAsync();
+
 
         mFeatureLayerMauQH=new FeatureLayer(mServiceFeatureTableMauQH);
         mFeatureLayerMauQH.loadAsync();
@@ -281,13 +284,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             }
             else {
-                String error = "Error loading mServiceFeatureTable layer: " + mFeatureLayer.getLoadError().getMessage();
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-                Log.e("OK", error);
+               // String error = "Error loading mServiceFeatureTable layer: " + mFeatureLayer.getLoadError().getMessage();
+                //Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                //Log.e("OK", error);
             }
         });
 
-        String url1="https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/DOTHIBIENHOA/26377/MapServer/0";
+       String url1="http://datdai.stnmt.dongnai.gov.vn/arcgis/rest/services/DOTHIBIENHOA/26377/MapServer/0";
+      //  String url1="http://stnmt.dongnai.gov.vn:8080/arcgis/rest/services/75731/26377/MapServer/1";
+       // String url1 ="https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/LongThanh_SoNha/SoNha_26368/MapServer/0";
+       // String url1 = "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0";
+
         mServiceFeatureTable=new ServiceFeatureTable(url1);
         mServiceFeatureTable.setCredential(user);
         mServiceFeatureTable.loadAsync();
@@ -300,11 +307,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(this, "Tải Bản Đồ Thành Công", Toast.LENGTH_LONG).show();            }
             else {
-                String error = "Error loading mFeatureLayer layer: " + mFeatureLayer.getLoadError().getMessage();
+                String error = "Error loading mFeatureLayer layer: " + mFeatureLayer.getLoadError().getCause()+" "+mFeatureLayer.getLoadError();
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show();
                 Log.e("OK", error);
             }
         });
+
 
         ArcGISMap map = mMapView.getMap();
       //  map.getBasemap().getBaseLayers().add(mFeatureLayerMauQH);
@@ -349,17 +357,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         fab_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER);
+                mLocationDisplay.startAsync();
 
-                if(ActivityCompat.checkSelfPermission(MainActivity.this
-                        ,Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_DENIED) {
-                    ZoomToGPS();
-                }
-                else {
-                    ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},44);
-                    Toast.makeText(getApplicationContext(), "Chưa bật định vị", Toast.LENGTH_SHORT).show();
-                }
             }
         });
+        lDisplayManager = mMapView.getLocationDisplay();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://apilayer.net/")
@@ -601,6 +604,55 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 });
     }
     String strContent="";
+    private void setupLocationDisplay() {
+        mLocationDisplay = mMapView.getLocationDisplay();
+        mLocationDisplay.addDataSourceStatusChangedListener(dataSourceStatusChangedEvent -> {
+
+            // If LocationDisplay started OK or no error is reported, then continue.
+            if (dataSourceStatusChangedEvent.isStarted() || dataSourceStatusChangedEvent.getError() == null) {
+                return;
+            }
+
+            int requestPermissionsCode = 2;
+            String[] requestPermissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+
+            // If an error is found, handle the failure to start.
+            // Check permissions to see if failure may be due to lack of permissions.
+            if (!(ContextCompat.checkSelfPermission(MainActivity.this, requestPermissions[0]) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(MainActivity.this, requestPermissions[1]) == PackageManager.PERMISSION_GRANTED)) {
+
+                // If permissions are not already granted, request permission from the user.
+                ActivityCompat.requestPermissions(MainActivity.this, requestPermissions, requestPermissionsCode);
+            } else {
+
+                // Report other unknown failure types to the user - for example, location services may not
+                // be enabled on the device.
+                String message = String.format("Error in DataSourceStatusChangedListener: %s", dataSourceStatusChangedEvent
+                        .getSource().getLocationDataSource().getError().getMessage());
+                Toast.makeText(MainActivity.this, "Vui lòng bật định vị", Toast.LENGTH_LONG).show();
+            }
+        });
+        //mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.COMPASS_NAVIGATION);
+        mLocationDisplay.startAsync();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            // Location permission was granted. This would have been triggered in response to failing to start the
+            // LocationDisplay, so try starting this again.
+            mLocationDisplay.startAsync();
+        } else {
+
+            // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
+            // request permission UX will be shown again, option should be shown to allow never showing the UX again.
+            // Alternative would be to disable functionality so request is not shown again.
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.location_permission_denied), Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private  void ShowCallOut(){
         mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
@@ -748,7 +800,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                                bottomSheet = new BottomSheetCustom(_maXa,soTo,soThua,dienTich,loaiDat);
 //                                bottomSheet.show(getSupportFragmentManager(),bottomSheet.getTag());
 //                                final View view =View.inflate(getApplicationContext(), R.layout.bottom_sheet,null);
-
+            fab.setRotation(45);
             bottomSheetBehavior = BottomSheetBehavior.from(linearLayoutBottomSheet);
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             bottomSheetBehavior.setPeekHeight(BottomSheetBehavior.PEEK_HEIGHT_AUTO);
@@ -1214,7 +1266,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 return;
             }
             TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-            String imei = telephonyManager.getDeviceId();
+            String imei = "";//telephonyManager.getDeviceId();
             String data = JsonConvert.ConvertQueryThanhVien(userName, passWord, imei);
             String key = "SoNhaajlkuoin1285sdfjk9LongThanh";
             String iv="IVsdfsdfgdf487LT";
@@ -1366,20 +1418,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void ZoomToGPS() {
         try {
 
-            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 if (!_enableGPS) {
                     _enableGPS = true;
-                    lDisplayManager = mMapView.getLocationDisplay();
                     lDisplayManager.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER);
-                    lDisplayManager.startAsync();
+                    if (!lDisplayManager.isStarted())
+                    {lDisplayManager.startAsync();
+
+                    }
+                    lDisplayManager.isShowLocation();
+
                 } else {
                     _enableGPS = false;
 
-                    lDisplayManager.stop();
+                   // lDisplayManager.stop();
                 }
 
-            }
+
         } catch (Exception ex) {
+            Log.i("error",ex.getMessage());
             //ex.printStackTrace();
         }
     }

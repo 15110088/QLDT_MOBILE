@@ -29,9 +29,9 @@
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/googlesansbold"
                     android:singleLine="true"
-                    android:text="THỬA ĐẤT"
+                    android:text="THÔNG TIN THỬA ĐẤT"
                     android:textColor="@color/white"
-                    android:textSize="30sp" />
+                    android:textSize="20sp" />
 
 
                 <LinearLayout
