@@ -13,12 +13,33 @@
     </LinearLayout>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="210dp"
+        android:layout_height="290dp"
         android:elevation="20dp"
         app:cardBackgroundColor="#ffffff"
         app:cardCornerRadius="8dp"
         >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            >
 
+            <TextView
+                style="@style/lblBodyRerular"
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textStyle="italic"
+                android:textColor="@color/colorPrimary"
+                android:text="Vùng quy hoạch"
+                android:textSize="13sp" />
+
+
+
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                                android:text="Quy Hoạch:"
+                                android:text="Chức Năng:"
                                 android:layout_width="wrap_content"
                                 style="@style/lblBodyBold"
                                 android:singleLine="true" />
@@ -43,8 +64,36 @@
                                 android:layout_width="fill_parent"
                                 style="@style/lblBodyRerular"
                                 android:id="@+id/txtQuyHoachItem"
-                                android:singleLine="true" />
+                                android:singleLine="false" />
             </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="20dp"
+            >
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content">-->
+<!--                <TextView-->
+<!--                    android:text="Công Trình:"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    style="@style/lblBodyBold"-->
+<!--                    android:singleLine="true" />-->
+<!--            </LinearLayout>-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content">-->
+<!--                <TextView-->
+<!--                    android:text=""-->
+<!--                    android:layout_width="fill_parent"-->
+<!--                    style="@style/lblBodyRerular"-->
+<!--                    android:id="@+id/txtDuAnItem"-->
+<!--                    android:singleLine="true" />-->
+<!--            </LinearLayout>-->
 
 
 
@@ -54,44 +103,43 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="100dp"
             android:layout_marginLeft="20dp"
             >
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
+
                 <TextView
-                    android:text="Diện Tích QH:"
-                    android:layout_width="wrap_content"
                     style="@style/lblBodyBold"
-                    android:singleLine="true" />
+                    android:layout_width="wrap_content"
+                    android:singleLine="true"
+                    android:text="Lô Đất:" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
                     android:text="***"
-                    android:layout_width="200dp"
+                    android:layout_width="40dp"
                     style="@style/lblBodyRerular"
-                    android:id="@+id/txtdientich"
+                    android:id="@+id/txtLo"
                     android:singleLine="true" />
-
             </LinearLayout>
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="50dp"
             >
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:text="Diện Tích Giao:"
+                    android:text="Diện Tích:"
                     android:layout_width="wrap_content"
                     style="@style/lblBodyBold"
                     android:singleLine="true" />
@@ -110,19 +158,44 @@
 
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="80dp"
+            >
+
+
+
+                <TextView
+                    style="@style/lblBodyRerular"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textStyle="italic"
+                    android:textColor="@color/colorPrimary"
+                    android:text="@string/Lochucnang"
+                    android:textSize="13sp" />
+
+
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="170dp"
+            android:layout_marginTop="190dp"
             >
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:text="Tằng Cao XD:"
+                    android:text="Tầng Cao XD:"
                     android:layout_width="wrap_content"
                     style="@style/lblBodyBold"
                     android:singleLine="true" />
@@ -142,6 +215,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_marginStart="5dp"
+                android:visibility="invisible"
                 android:layout_height="wrap_content">
                 <TextView
                     android:text="Mục Đích SD:"
@@ -150,9 +224,10 @@
                     style="@style/lblBodyBold"
                     android:singleLine="true" />
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="wrap_content"
+                android:visibility="invisible"
+
                 android:layout_height="wrap_content">
                 <TextView
                     android:text="***"
@@ -168,7 +243,7 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="110dp"
+            android:layout_marginTop="130dp"
             >
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -180,8 +255,6 @@
                         style="@style/lblBodyBold"
 
                         android:singleLine="true" />
-
-
                     <TextView
                         android:text="****"
                         android:layout_width="70dp"
@@ -190,42 +263,42 @@
                         android:singleLine="true" />
 
             </LinearLayout>
-
-
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="160dp"
+            android:layout_marginLeft="20dp"
+            >
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_marginStart="20dp"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:text="Lô Đất Chức Năng:"
+                    android:text="Diện Tích:"
                     android:layout_width="wrap_content"
                     style="@style/lblBodyBold"
                     android:singleLine="true" />
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
                     android:text="***"
-                    android:layout_width="40dp"
+                    android:layout_width="200dp"
                     style="@style/lblBodyRerular"
-                    android:id="@+id/txtLo"
+                    android:id="@+id/txtdientich"
                     android:singleLine="true" />
+
             </LinearLayout>
-
-
-
-
-
-
         </LinearLayout>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="140dp"
+            android:layout_marginTop="220dp"
             >
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -249,9 +322,21 @@
                     android:singleLine="true" />
             </LinearLayout>
 
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="250dp"
+            >
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_marginStart="10dp"
 
                 android:layout_height="wrap_content">
                 <TextView
@@ -278,21 +363,8 @@
 
 
 
-
-
-
         </LinearLayout>
 
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="140dp"
-            >
-
-        </LinearLayout>
 
 
     </androidx.cardview.widget.CardView>

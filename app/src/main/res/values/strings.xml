@@ -1,11 +1,13 @@
 <resources>
-    <string name="app_name">QLDT_MOBILE</string>
+    <string name="app_name">QHĐT.BienHoa</string>
     <string name="title_activity_loggin">Đăng nhập</string>
     <string name="action_settings">Cài đặt</string>
     <string name="hind_timkiem">(Nhập tờ/thửa) hoặc số nhà</string>
     <string name="dangnhap">Đăng nhập</string>
     <string name="Caidat">Cài đặt</string>
     <string name="search">Tìm kiếm</string>
+    <string name="Lochucnang"><u>Thuộc lô chức năng</u></string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="location_permission_denied">User denied permission for device location.</string>

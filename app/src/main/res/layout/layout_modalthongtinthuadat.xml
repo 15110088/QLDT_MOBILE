@@ -29,9 +29,9 @@
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/googlesansbold"
                     android:singleLine="true"
-                    android:text="THÔNG TIN THỬA ĐẤT"
+                    android:text="Thông tin thửa đất"
                     android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
 
                 <LinearLayout
@@ -53,7 +53,7 @@
                             android:singleLine="true"
                             android:text="***"
                             android:textColor="@color/white"
-                            android:textSize="22sp" />
+                            android:textSize="20sp" />
 
                         <TextView
                             android:layout_width="80dp"
@@ -82,7 +82,7 @@
                             android:text="***"
                             android:textColor="@color/white"
 
-                            android:textSize="22sp" />
+                            android:textSize="20sp" />
 
                         <TextView
                             android:layout_width="80dp"
@@ -111,7 +111,7 @@
                             android:singleLine="true"
                             android:text="***"
                             android:textColor="@color/white"
-                            android:textSize="22sp" />
+                            android:textSize="20sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -141,7 +141,7 @@
             >
 
         <TextView
-            android:text="THÔNG TIN QUY HOẠCH"
+            android:text="Thông tin quy hoạch đô thị"
             android:layout_margin="10dp"
             style="@style/lblTitle"
             android:layout_width="wrap_content"
@@ -164,18 +164,24 @@
         </LinearLayout>
 
         <TextView
-            android:text="Theo Quyết Định Số:***** Ngày...Tháng...Năm..."
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="5dp"
+            android:id="@+id/txtQuyetDinh"
             style="@style/lblBodyRerular"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true" />
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"
+            android:singleLine="true"
+            android:text="Theo Quyết Định Số:613 ,Ngày 03 Tháng 03 Năm 2020"
+            android:textSize="13sp"
+            android:textColor="#000fff"
+            android:textStyle="italic"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/rvQuyHoach"
+
             android:layout_marginHorizontal="20dp"
             android:layout_marginBottom="20dp"
             android:background="@color/colorScreen"

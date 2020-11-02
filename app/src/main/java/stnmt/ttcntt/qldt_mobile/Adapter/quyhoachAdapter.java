@@ -37,24 +37,7 @@ public class quyhoachAdapter extends RecyclerView.Adapter<quyhoachAdapter.ViewHo
         View row;
         LayoutInflater inflater=LayoutInflater.from(parent.getContext());
         row=inflater.inflate(R.layout.row_item_quyhoach,parent,false);
-
         Log.e("TypeView", (String.valueOf(viewType)));
-//        switch (viewType)
-//        {
-//
-//            case 0:
-//                row=inflater.inflate(R.layout.row_item_quyhoach,parent,false);
-//                break;
-//            case 1:
-//                row=inflater.inflate(R.layout.row_item_quyhoach_null,parent,false);
-//
-//                break;
-//            default:
-//                row=inflater.inflate(R.layout.row_item_quyhoach_null,parent,false);
-//                break;
-//
-//        }
-
         return new ViewHolder(row);
     }
 
@@ -113,11 +96,11 @@ public class quyhoachAdapter extends RecyclerView.Adapter<quyhoachAdapter.ViewHo
                 txtDienTich = itemView.findViewById(R.id.txtdientich);
                 txtDienTichGiao = itemView.findViewById(R.id.txtdientichGiao);
                 txtMDSD=itemView.findViewById(R.id.txtMDSD);
+                //CLick item recyecle view
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         itemClickListener.onClick(v,getAdapterPosition(),false);
-
                     }
                 });
             }

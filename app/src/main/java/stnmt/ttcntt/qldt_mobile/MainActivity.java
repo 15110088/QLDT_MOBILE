@@ -71,16 +71,19 @@ import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.ArcGISMapImageSublayer;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.layers.WebTiledLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.Viewpoint;
+import com.esri.arcgisruntime.mapping.view.BackgroundGrid;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
@@ -147,6 +150,7 @@ import stnmt.ttcntt.qldt_mobile.Util.BottomSheetCustom;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, IEventImageButton {
     private MapView mMapView;
+    private ArcGISMap map;
     private Callout mCallout;
     private ServiceFeatureTable mServiceFeatureTable;
     private FeatureLayer mFeatureLayer;
@@ -177,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private String soTo = "";
     private String soThua = "";
     private String dienTich = "";
-    private String _tieuDe = "Xã Phước Tân";
+    private String _tieuDe = "Phường Phước Tân";
     private String loaiDat="";
     private String loaiQH ="";
     LayoutInflater inflater;
@@ -238,27 +242,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             setupNavigationDrawerContent(navigationView);
         }
         setupNavigationDrawerContent(navigationView);
-//        try {
-//
-//            Bundle bundle = getIntent().getExtras();
-//            _maXa = bundle.getString("strMaKvHc");
-//            _maHuyen = bundle.getString("strMaKvHcCha");
-//            _tieuDe = bundle.getString("strTenKvHc");
-//            actionBar.setTitle(_tieuDe.substring(0, 1).toUpperCase() + _tieuDe.substring(1));
-//            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-//            SharedPreferences.Editor editor = sharedPref.edit();
-//            editor.putString("MaHuyenSharedPreferences", _maHuyen);
-//            editor.putString("MaXaSharedPreferences", _maXa);
-//            editor.putString("TieuDeSharedPreferences", _tieuDe);
-//            editor.apply();
-//            soTo = bundle.getString("strSoTo");
-//            soThua = bundle.getString("strSoThua");
-//            /*String user=sharedPref.getString("AccountSharedPreferences","");
-//            String pass=sharedPref.getString("PasswordSharedPreferences","");
-//            if(user!=""&&pass!="")
-//                DangNhap(user,pass);*/
-//        } catch (Exception ex) {
-//        }
+
         if (_maHuyen == null || _maHuyen.length()<1) CheckLastDaTa();
         actionBar.setTitle(_tieuDe);
         actionBar.setCustomView(R.layout.search_bar);
@@ -271,56 +255,100 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         InitControll();
         setupLocationDisplay();
         UserCredential user = new UserCredential("dothibienhoa", "dothibienhoa2020");
-        //UserCredential user = new UserCredential("bienhoa", "Stnmt75731");
+        UserCredential userBH = new UserCredential("bienhoa", "Stnmt75731");
+
         mServiceFeatureTableMauQH=new ServiceFeatureTable("http://datdai.stnmt.dongnai.gov.vn/arcgis/rest/services/DOTHIBIENHOA/PhanKhu_26377/MapServer/0");
         mServiceFeatureTableMauQH.setCredential(user);
-        mServiceFeatureTableMauQH.loadAsync();
-
-
         mFeatureLayerMauQH=new FeatureLayer(mServiceFeatureTableMauQH);
-        mFeatureLayerMauQH.loadAsync();
         mFeatureLayerMauQH.addDoneLoadingListener(()->{
-            if (mFeatureLayerMauQH.getLoadStatus() == LoadStatus.LOADED) {
 
-            }
-            else {
-               // String error = "Error loading mServiceFeatureTable layer: " + mFeatureLayer.getLoadError().getMessage();
-                //Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-                //Log.e("OK", error);
-            }
+
         });
+
+
 
        String url1="http://datdai.stnmt.dongnai.gov.vn/arcgis/rest/services/DOTHIBIENHOA/26377/MapServer/0";
       //  String url1="http://stnmt.dongnai.gov.vn:8080/arcgis/rest/services/75731/26377/MapServer/1";
        // String url1 ="https://stnmt.dongnai.gov.vn:8443/arcgisdichvussl/rest/services/LongThanh_SoNha/SoNha_26368/MapServer/0";
        // String url1 = "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0";
-
         mServiceFeatureTable=new ServiceFeatureTable(url1);
         mServiceFeatureTable.setCredential(user);
-        mServiceFeatureTable.loadAsync();
 
         mFeatureLayer=new FeatureLayer(mServiceFeatureTable);
-        mFeatureLayer.loadAsync();
-        mFeatureLayer.addDoneLoadingListener(()->{
-            if (mFeatureLayer.getLoadStatus() == LoadStatus.LOADED) {
-                _isLoadingMap=true;
-                progressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(this, "Tải Bản Đồ Thành Công", Toast.LENGTH_LONG).show();            }
-            else {
-                String error = "Error loading mFeatureLayer layer: " + mFeatureLayer.getLoadError().getCause()+" "+mFeatureLayer.getLoadError();
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-                Log.e("OK", error);
+
+      //  map = new ArcGISMap(SpatialReference.create(3857));
+        final WebTiledLayer webTiledLayer = new WebTiledLayer("https://mts1.google.com/vt/lyrs=m&hl=x-local&src=app&x={col}&y={row}&z={level}&s=Galile");
+        webTiledLayer.loadAsync();
+        webTiledLayer.addDoneLoadingListener(() -> {
+            if (webTiledLayer.getLoadStatus() == LoadStatus.LOADED) {
+
             }
         });
 
+        ArcGISTiledLayer tiledLayerBaseMap = new ArcGISTiledLayer("http://datdai.stnmt.dongnai.gov.vn/arcgis/rest/services/DOTHIBIENHOA/PhanKhu_26377/MapServer");
+        tiledLayerBaseMap.setCredential(user);
+        ArcGISTiledLayer tiledLayerBaseMap1 = new ArcGISTiledLayer("http://stnmt.dongnai.gov.vn:8080/arcgis/rest/services/75731/26377/MapServer");
+        tiledLayerBaseMap1.setCredential(userBH);
+       // map.getBasemap().getBaseLayers().add(webTiledLayer);
 
-        ArcGISMap map = mMapView.getMap();
-      //  map.getBasemap().getBaseLayers().add(mFeatureLayerMauQH);
-        map.getOperationalLayers().add(mFeatureLayerMauQH);
+        //map.getBasemap().getBaseLayers().add(tiledLayerBaseMap);
+        //map.getBasemap().getBaseLayers().add(tiledLayerBaseMap1);
 
+        map.getOperationalLayers().add(tiledLayerBaseMap);
         map.getOperationalLayers().add(mFeatureLayer);
 
+        mMapView = (MapView) findViewById(R.id.mapView);
+        BackgroundGrid backgroundGrid = new BackgroundGrid(Color.WHITE,Color.WHITE,0,2);
+        mMapView.setBackgroundGrid(backgroundGrid);
+        mMapView.setMap(map);
+
+//        Point startPoint = new Point(435931.880, 1210144.374, map.getSpatialReference());
+//        mMapView.setViewpointCenterAsync(startPoint, 1000000);
+        mMapView.setAttributionTextVisible(false);
+        //SpatialReference spatialReference = SpatialReference.create(3857);
+        //Point startPoint = new Point(11929612.044659, 1225568.999846,  spatialReference);
+        //mMapView.setViewpointCenterAsync(startPoint, 850000);
+//        mMapView.setAttributionTextVisible(false);
+
+        mFeatureLayer.addDoneLoadingListener(new Runnable() {
+            @Override
+            public void run() {
+                //code here to check for error status
+                if (mFeatureLayer.getLoadStatus() == LoadStatus.LOADED) {
+                    Toast.makeText(getApplication(), "Tải Bản Đồ ", Toast.LENGTH_LONG).show();
+                    _isLoadingMap=true;
+                    progressBar.setVisibility(View.INVISIBLE);
+
+                }
+                if (mFeatureLayer.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+                    Toast.makeText(getApplication(), "Lỗi FAILED_TO_LOAD mFeatureLayer", Toast.LENGTH_LONG).show();
+
+                }
+                if (mFeatureLayer.getLoadStatus() == LoadStatus.NOT_LOADED) {
+                    Toast.makeText(getApplication(), "Lỗi NOT_LOADED  mFeatureLayer", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+
+        map.addDoneLoadingListener(new Runnable() {
+            @Override
+            public void run() {
+                //code here to check for error status
+                if (map.getLoadStatus() == LoadStatus.LOADED) {
+                    Toast.makeText(getApplication(), "Tải Bản Đồ Quy Hoạch", Toast.LENGTH_LONG).show();
+                }
+                if (map.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+                    Toast.makeText(getApplication(), "Lỗi FAILED_TO_LOAD  Quy Hoạch", Toast.LENGTH_LONG).show();
+                }
+                if (map.getLoadStatus() == LoadStatus.NOT_LOADED) {
+                    Toast.makeText(getApplication(), "Lỗi NOT_LOADED  Quy Hoạch", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         ZoomToXa(mMapView,_maXa);
+        map.setMinScale(100000);
 
         GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
         mMapView.getGraphicsOverlays().add(graphicsOverlay);
@@ -359,7 +387,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER);
                 mLocationDisplay.startAsync();
-
             }
         });
         lDisplayManager = mMapView.getLocationDisplay();
@@ -370,7 +397,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 .build();
 
         ConvertMoneyService service= retrofit.create(ConvertMoneyService.class);
-
         Call<ResponseCurrency> repos = service.convertVNDtoUSD("843d4d34ae72b3882e3db642c51e28e6","VND", "USD", 1);
 
 //        repos.enqueue(new Callback<ResponseCurrency>() {
@@ -458,6 +484,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         _isExpaned=false;
                         LevelBottomSheet=1;
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
                     }
                     else {
                             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -526,8 +553,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             double latitude =  10.890587;
             double longitude = 106.922532;
             int levelOfDetail = 11;
-            ArcGISMap map = new ArcGISMap(basemapType, latitude, longitude, levelOfDetail);
-            mMapView.setMap(map);
+            map = new ArcGISMap(basemapType, latitude, longitude, levelOfDetail);
+           // ArcGISMap map = new ArcGISMap(SpatialReference.create(3857));
+           // mMapView.setMap(map);
         }
     }
     private void setupNavigationDrawerContent(NavigationView navigationView) {
@@ -541,7 +569,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 Intent intenMain = new Intent(MainActivity.this,MainActivity.class);
                                 startActivity(intenMain);
-                                //ZoomToXa(mMapView,_maXa);
                                 return true;
                             case R.id.item_kvhc_huyen:
                                 menuItem.setChecked(true);
@@ -552,8 +579,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 bundle.putString("strMaKvHcCha", "75");
                                 bundle.putString("strTenHuyen","TP Biên Hòa");
                                 intenCapXa.putExtras(bundle);
-                                startActivity(intenCapXa);
-                               //startActivityForResult(intenCapXa, 3);
+                                //startActivity(intenCapXa);
+                                startActivityForResult(intenCapXa, 3);
                                 return true;
                             /*case R.id.item_bieuDo:
                                 menuItem.setChecked(true);
@@ -597,6 +624,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 Uri uriUrl = Uri.parse(url);
                                 Intent launchBrower = new Intent(Intent.ACTION_VIEW,uriUrl);
                                 startActivity(launchBrower);
+
                                 return  true;
                         }
                         return true;
@@ -634,6 +662,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
         //mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.COMPASS_NAVIGATION);
         mLocationDisplay.startAsync();
+        mLocationDisplay.startAsync();
     }
 
     @Override
@@ -641,15 +670,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // If request is cancelled, the result arrays are empty.
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-            // Location permission was granted. This would have been triggered in response to failing to start the
-            // LocationDisplay, so try starting this again.
             mLocationDisplay.startAsync();
         } else {
-
-            // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
-            // request permission UX will be shown again, option should be shown to allow never showing the UX again.
-            // Alternative would be to disable functionality so request is not shown again.
             Toast.makeText(MainActivity.this, getResources().getString(R.string.location_permission_denied), Toast.LENGTH_SHORT).show();
         }
     }
@@ -1394,7 +1416,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         if (resultIterator.hasNext()) {
                             Feature feature = resultIterator.next();
                             Envelope en = feature.getGeometry().getExtent();
-                            mMapView.setViewpointGeometryAsync(en, 10);
+
+                            mMapView.setViewpointGeometryAsync(en, 9);
                             // Toast.makeText(getApplicationContext(),feature.getAttributes().get("LOAIDAT").toString(), Toast.LENGTH_LONG).show();
 
                         } else {

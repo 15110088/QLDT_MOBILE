@@ -1,6 +1,8 @@
 package stnmt.ttcntt.qldt_mobile;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.Layout;
 import android.util.Log;
@@ -49,7 +51,7 @@ public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayL
     private static final String TAG_QUYHOACH = "quyHoach";
     private static final String TAG_NGUONGOC = "moTa";
     private static final String TAG_CHANGIAODICH= "biChan";
-    TextView lblSoTo,txtSoVungQuyHoach, lblSoThua, lblDienTich,lblLoaiDat, lblTenChu, lblTinhTrangcapGiay,lblSoNha,lblDiaChi,lblChanGD,lblNguonGoc,lblSoNHaTest;
+    TextView lblSoTo,txtSoVungQuyHoach,txtQuyetDinh, lblSoThua, lblDienTich,lblLoaiDat, lblTenChu, lblTinhTrangcapGiay,lblSoNha,lblDiaChi,lblChanGD,lblNguonGoc,lblSoNHaTest;
     RecyclerView rv;
     View activityCha;
     String jsonStr;
@@ -175,6 +177,18 @@ public class AsynTaskModalThongTinThuaDat  extends AsyncTask<clsUrl,Void, ArrayL
     protected void onPostExecute(ArrayList<clsThuaDat> thuaDat) {
         super.onPostExecute(thuaDat);
         try{
+            txtQuyetDinh=(TextView) activityCha.findViewById(R.id.txtQuyetDinh);
+            txtQuyetDinh.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String url ="https://www.dongnai.gov.vn/Shared%20Documents/2-2020-QD-613.pdf";
+                    Uri uriUrl = Uri.parse(url);
+                    Intent launchBrower = new Intent(Intent.ACTION_VIEW,uriUrl);
+                    activityCha.getContext().startActivity(launchBrower);
+
+
+                }
+            });
             if(thuaDat == null)
                 return;
             lblSoTo = (TextView) activityCha.findViewById(R.id.txtSoTo);

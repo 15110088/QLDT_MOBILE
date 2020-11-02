@@ -63,7 +63,6 @@ public class thongtinthuadat extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View  view = inflater.inflate(R.layout.fragment_thongtinthuadat, container, false);
-
         return view;
     }
 }

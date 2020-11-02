@@ -67,7 +67,8 @@ public class ChonXaActivity extends AppCompatActivity {
                 bundle.putString("strMaKvHcCha",img.getTag().toString());
                 bundle.putString("strTenKvHc",lbl.getText().toString());
                 intenMain.putExtras(bundle);
-                startActivity(intenMain);
+                startActivityForResult(intenMain, 3);
+
             }
         });
 
